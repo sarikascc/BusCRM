@@ -26,7 +26,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"; // Make sure this path matches your project!
+} from "@/components/ui/tooltip";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -180,7 +180,6 @@ export default function Sidebar({
               </Tooltip>
             </TooltipProvider>
           ) : (
-            /* EXPANDED: Interactive Profile Card Accordion */
             <div className="animate-in fade-in duration-300">
               <p className="text-[11px] font-bold text-slate-500 tracking-wider mb-2.5 px-2">
                 MY PROFILE
