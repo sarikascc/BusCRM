@@ -37,7 +37,7 @@ export default function LeadList({
   showCityFilters = true,
   showStatusFilter = true,
   emptyMessage = "No leads found.",
-  isFollowUpPage = false, // Fallback prop just in case
+  isFollowUpPage = false,
 }: {
   initialLeads: any[];
   defaultStatus?: string;
@@ -49,15 +49,11 @@ export default function LeadList({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-
-  // Auto-detect if we are on the Follow Ups page based on the URL or the prop
   const isFollowUpRoute =
     isFollowUpPage || (pathname && pathname.toLowerCase().includes("follow"));
 
-  // TABS
   const [activeTab, setActiveTab] = useState<"Main" | "AutoClosed">("Main");
 
-  // Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
   const [filterStatus, setFilterStatus] = useState(defaultStatus);
@@ -65,21 +61,17 @@ export default function LeadList({
   const [filterToCity, setFilterToCity] = useState("");
   const [filterDate, setFilterDate] = useState("");
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  // Modals & Panels
   const [statusModal, setStatusModal] = useState<any>(null); // For Booked/Cancelled
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  // FOLLOW UP DRAWER
   const [followUpLead, setFollowUpLead] = useState<any>(null);
   const [followUpNote, setFollowUpNote] = useState("");
   const [nextFollowUpDate, setNextFollowUpDate] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // INFO / INITIAL NOTE CENTER MODAL
   const [infoLead, setInfoLead] = useState<any>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
@@ -97,14 +89,12 @@ export default function LeadList({
     filterDate,
   ]);
 
-  // Preload Follow-Up Date When Follow-Up Drawer Opens
   useEffect(() => {
     if (followUpLead) {
       setNextFollowUpDate(followUpLead.next_follow_up_date || "");
     }
   }, [followUpLead]);
 
-  // --- DRAWER & MODAL HANDLERS ---
   const openDrawer = (lead: any) => {
     setFollowUpLead(lead);
     setTimeout(() => setIsDrawerOpen(true), 10);
@@ -131,7 +121,6 @@ export default function LeadList({
     }, 300);
   };
 
-  // RESET FILTERS
   const resetFilters = () => {
     setSearchTerm("");
     setFilterType("");
@@ -142,7 +131,6 @@ export default function LeadList({
     setCurrentPage(1);
   };
 
-  // FILTER LOGIC
   const filteredLeads = initialLeads.filter((lead) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
@@ -186,7 +174,6 @@ export default function LeadList({
     );
   });
 
-  // PAGINATION LOGIC
   const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentLeads = filteredLeads.slice(
@@ -194,7 +181,6 @@ export default function LeadList({
     startIndex + itemsPerPage,
   );
 
-  // Center Modal Submission (Booked/Cancelled)
   async function confirmStatusChange() {
     if (!statusModal) return;
     try {
@@ -262,7 +248,6 @@ export default function LeadList({
     }
   }
 
-  // HELPER: Extract only the FIRST note for visibility checks
   const getEnquiryNote = (notes: string) => {
     if (!notes) return null;
     const noteArray = notes.split("|||").filter(Boolean);
@@ -323,7 +308,6 @@ export default function LeadList({
     }
   };
 
-  // RENDER: Full timeline of notes (For Follow-Up Drawer)
   const renderTimelineNotes = (leadData: any) => {
     if (!leadData || (!leadData.notes && !leadData.cancellation_reason)) {
       return (
@@ -398,7 +382,6 @@ export default function LeadList({
 
   return (
     <div className="saas-card bg-white flex flex-col h-full border-t-4 border-t-[#3da9d4] overflow-hidden relative">
-      {/* ---------------- TABS (Hidden on Follow Up page) ---------------- */}
       {!isFollowUpRoute && (
         <div className="flex items-center gap-6 px-5 pt-4 border-b border-slate-100 bg-white shrink-0">
           <button
@@ -424,7 +407,6 @@ export default function LeadList({
         </div>
       )}
 
-      {/* FILTER BAR */}
       <div className="p-4 border-b border-slate-100 flex flex-col xl:flex-row gap-3 items-center bg-slate-50/50 shrink-0">
         <div className="relative w-full xl:flex-1 min-w-[150px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -447,7 +429,6 @@ export default function LeadList({
           <option value="Parcel">Parcel</option>
         </select>
 
-        {/* STATUS FILTER - Hidden completely on the Auto Closed tab */}
         {showStatusFilter && activeTab === "Main" && (
           <select
             className="input-primary py-2 text-sm w-full xl:w-auto bg-white shadow-sm font-medium"
@@ -554,7 +535,6 @@ export default function LeadList({
             </thead>
             <tbody className="divide-y divide-slate-100">
               {currentLeads.map((lead) => {
-                // HARD CHECK: Is this specific lead auto closed?
                 const isAutoClosed =
                   lead.status === "New" && lead.journey_date < todayStr;
 
@@ -652,7 +632,6 @@ export default function LeadList({
                     <td className="px-4 py-3 text-right whitespace-nowrap">
                       <TooltipProvider delayDuration={0}>
                         <div className="flex items-center justify-end gap-0.5 opacity-60 group-hover:opacity-100 transition-opacity">
-                          {/* 1. CLICKABLE VIEW NOTE ICON (Opens Center Modal) */}
                           {getEnquiryNote(lead.notes) && (
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -816,7 +795,6 @@ export default function LeadList({
         </div>
       </div>
 
-      {/* STATUS ACTION CENTER MODAL (Booked/Cancelled) */}
       {statusModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95">
@@ -856,9 +834,6 @@ export default function LeadList({
         </div>
       )}
 
-      {/* ------------------------------------------------------------------------------------------------ */}
-      {/* 1. INITIAL NOTE CENTER MODAL (READ ONLY) */}
-      {/* ------------------------------------------------------------------------------------------------ */}
       {isInfoModalOpen && infoLead && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
@@ -899,9 +874,6 @@ export default function LeadList({
         </div>
       )}
 
-      {/* ------------------------------------------------------------------------------------------------ */}
-      {/* 2. MAIN FOLLOW-UP DRAWER (WITH ADD NOTE OPTION & TIMELINE) */}
-      {/* ------------------------------------------------------------------------------------------------ */}
       {followUpLead && (
         <div
           className={`fixed inset-0 z-[100] flex justify-end transition-opacity duration-300 ease-in-out ${
