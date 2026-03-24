@@ -166,7 +166,7 @@ The PostgreSQL database uses **strict typing with custom enums** and is organize
 ## 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone [https://github.com/sarikascc/BusCRM.git](https://github.com/sarikascc/BusCRM.git)
 cd buscrm
 ```
 
