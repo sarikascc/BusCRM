@@ -41,7 +41,7 @@ export default function OperatorForm({ operators = [] }: Props) {
         operator_name: "",
         person_name: "",
         mobile_number: "",
-        commission_percentage: "0",
+        commission_percentage: "10",
         status: "Active",
       });
     }

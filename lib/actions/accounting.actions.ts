@@ -9,6 +9,9 @@ export interface Account {
   opening_balance: number;
   status: "Active" | "Inactive";
   created_at: string;
+  total_in: number;
+  total_out: number;
+  current_balance: number;
 }
 
 export interface Category {
@@ -38,14 +41,32 @@ export async function getAccounts() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("accounts")
-    .select("*")
+    .select(`
+      *,
+      entries(amount, type)
+    `)
     .order("name");
 
   if (error) {
     console.error("Error fetching accounts:", error);
     return [];
   }
-  return data as Account[];
+
+  return (data as any[]).map((acc) => {
+    const total_in = acc.entries
+      ?.filter((e: any) => e.type === "Income")
+      .reduce((sum: number, e: any) => sum + Number(e.amount), 0) || 0;
+    const total_out = acc.entries
+      ?.filter((e: any) => e.type === "Expense")
+      .reduce((sum: number, e: any) => sum + Number(e.amount), 0) || 0;
+    
+    return {
+      ...acc,
+      total_in,
+      total_out,
+      current_balance: Number(acc.opening_balance) + total_in - total_out,
+    };
+  }) as Account[];
 }
 
 export async function createAccount(data: Omit<Account, "id" | "created_at">) {

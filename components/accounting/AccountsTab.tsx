@@ -93,9 +93,9 @@ export default function AccountsTab({ initialAccounts }: Props) {
                   [
                     <td key="name" className="px-6 py-4 text-sm text-slate-800 font-bold">{acc.name}</td>,
                     <td key="opening" className="px-6 py-4 text-sm text-right text-slate-600">{mounted ? formatCurrency(acc.opening_balance) : `₹${acc.opening_balance}`}</td>,
-                    <td key="in" className="px-6 py-4 text-sm text-right text-emerald-600 font-bold">₹0</td>,
-                    <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">₹0</td>,
-                    <td key="balance" className="px-6 py-4 text-sm text-right font-black text-[#3da9d4]">{mounted ? formatCurrency(acc.opening_balance) : `₹${acc.opening_balance}`}</td>,
+                    <td key="in" className="px-6 py-4 text-sm text-right text-emerald-600 font-bold">{mounted ? formatCurrency(acc.total_in) : `₹${acc.total_in}`}</td>,
+                    <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">{mounted ? formatCurrency(acc.total_out) : `₹${acc.total_out}`}</td>,
+                    <td key="balance" className="px-6 py-4 text-sm text-right font-black text-[#3da9d4]">{mounted ? formatCurrency(acc.current_balance) : `₹${acc.current_balance}`}</td>,
                     <td key="status" className="px-6 py-4 text-center">
                       <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                         acc.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
