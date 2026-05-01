@@ -18,6 +18,7 @@ import {
   Menu,
   ChevronUp,
   ChevronDown,
+  Tickets,
 } from "lucide-react";
 import { signOut } from "@/lib/actions/auth.actions";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,9 @@ const navItems = [
   { name: "Confirmed Bookings", href: "/confirmed", icon: Ticket },
   { name: "Customers", href: "/customers", icon: Users },
   { name: "Cities", href: "/cities", icon: MapPin },
+  { name: "Ticket Booking", href: "/ticket-booking", icon: Tickets },
+  { name: "Operators", href: "/operators", icon: Users },
+  { name: "Accounting", href: "/accounting", icon: LayoutDashboard },
   { name: "Users", href: "/users", icon: UserCog, adminOnly: true },
 ];
 

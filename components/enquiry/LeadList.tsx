@@ -225,10 +225,10 @@ export default function LeadList({
         .toUpperCase();
       const newFutureDate = nextFollowUpDate
         ? new Date(nextFollowUpDate).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
         : "NONE";
       const newNoteString = `[${newTimestamp}] ${followUpNote}@@@${newFutureDate}`;
 
@@ -386,21 +386,19 @@ export default function LeadList({
         <div className="flex items-center gap-6 px-5 pt-4 border-b border-slate-100 bg-white shrink-0">
           <button
             onClick={() => setActiveTab("Main")}
-            className={`pb-3 text-sm font-bold border-b-2 transition-colors ${
-              activeTab === "Main"
+            className={`pb-3 text-sm font-bold border-b-2 transition-colors ${activeTab === "Main"
                 ? "border-[#3da9d4] text-[#3da9d4]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
+              }`}
           >
             Main Leads
           </button>
           <button
             onClick={() => setActiveTab("AutoClosed")}
-            className={`pb-3 text-sm font-bold border-b-2 transition-colors ${
-              activeTab === "AutoClosed"
+            className={`pb-3 text-sm font-bold border-b-2 transition-colors ${activeTab === "AutoClosed"
                 ? "border-slate-400 text-slate-600"
                 : "border-transparent text-slate-400 hover:text-slate-600"
-            }`}
+              }`}
           >
             Auto Closed
           </button>
@@ -556,11 +554,10 @@ export default function LeadList({
 
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span
-                        className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider ${
-                          lead.type === "Ticket"
+                        className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider ${lead.type === "Ticket"
                             ? "bg-indigo-50 text-indigo-600 border border-indigo-100"
                             : "bg-orange-50 text-orange-600 border border-orange-100"
-                        }`}
+                          }`}
                       >
                         {lead.type}
                       </span>
@@ -606,8 +603,8 @@ export default function LeadList({
 
                     <td className="px-4 py-3 whitespace-nowrap">
                       {lead.status !== "Booked" &&
-                      lead.status !== "Cancelled" &&
-                      lead.next_follow_up_date ? (
+                        lead.status !== "Cancelled" &&
+                        lead.next_follow_up_date ? (
                         <span className="text-sm text-slate-700 font-medium">
                           {new Date(
                             lead.next_follow_up_date,
@@ -652,7 +649,7 @@ export default function LeadList({
 
                           {/* 2. THE REST OF THE ACTIONS */}
                           {lead.status === "Cancelled" &&
-                          (lead.notes || lead.cancellation_reason) ? (
+                            (lead.notes || lead.cancellation_reason) ? (
                             <div className="flex items-center justify-end">
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -876,9 +873,8 @@ export default function LeadList({
 
       {followUpLead && (
         <div
-          className={`fixed inset-0 z-[100] flex justify-end transition-opacity duration-300 ease-in-out ${
-            isDrawerOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`fixed inset-0 z-[100] flex justify-end transition-opacity duration-300 ease-in-out ${isDrawerOpen ? "opacity-100" : "opacity-0"
+            }`}
         >
           <div
             className="absolute inset-0 bg-slate-900/40"
@@ -886,18 +882,16 @@ export default function LeadList({
           />
 
           <div
-            className={`relative bg-white w-full max-w-[500px] h-full shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
-              isDrawerOpen ? "translate-x-0" : "translate-x-full"
-            }`}
+            className={`relative bg-white w-full max-w-[500px] h-full shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isDrawerOpen ? "translate-x-0" : "translate-x-full"
+              }`}
           >
             <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
               <div className="flex items-center gap-3">
                 <div
-                  className={`p-2.5 rounded-xl border ${
-                    followUpLead.status === "Cancelled"
+                  className={`p-2.5 rounded-xl border ${followUpLead.status === "Cancelled"
                       ? "bg-rose-50 text-rose-600 border-rose-100"
                       : "bg-amber-50 text-amber-600 border-amber-100"
-                  }`}
+                    }`}
                 >
                   {followUpLead.status === "Cancelled" ? (
                     <AlertCircle className="w-5 h-5" />

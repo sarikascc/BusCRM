@@ -1,6 +1,23 @@
 -- 1. Custom Enums
-CREATE TYPE lead_type AS ENUM ('Ticket', 'Parcel');
-CREATE TYPE lead_status AS ENUM ('Open', 'Follow Up', 'Completed', 'Cancelled', 'Auto Closed');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type
+    WHERE typname = 'lead_type'
+  ) THEN
+    EXECUTE 'CREATE TYPE lead_type AS ENUM (''Ticket'', ''Parcel'')';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type
+    WHERE typname = 'lead_status'
+  ) THEN
+    EXECUTE 'CREATE TYPE lead_status AS ENUM (''Open'', ''Follow Up'', ''Completed'', ''Cancelled'', ''Auto Closed'')';
+  END IF;
+END
+$$;
 
 -- Add new statuses safely
 ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'New';
@@ -17,13 +34,13 @@ CREATE TABLE leads (
   to_city_id UUID REFERENCES cities(id) NOT NULL,
   journey_date DATE NOT NULL,
   type lead_type NOT NULL,
-  number_of_seats INTEGER, 
-  parcel_weight DECIMAL,   
+  number_of_seats INTEGER,
+  parcel_count INTEGER,
   notes TEXT,
   status lead_status DEFAULT 'Open' NOT NULL,
   next_follow_up_date DATE,
   cancellation_reason TEXT,
-  created_by UUID REFERENCES users(id),
+  created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
 
@@ -39,9 +56,9 @@ CHECK (
 );
 
 ALTER TABLE leads
-ADD CONSTRAINT check_parcel_weight 
+ADD CONSTRAINT check_parcel_count 
 CHECK (
-  (type = 'Parcel' AND parcel_weight IS NOT NULL) OR 
+  (type = 'Parcel' AND parcel_count IS NOT NULL) OR 
   (type != 'Parcel')
 );
 
