@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { X, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Loader2, Wallet, Tag, Calendar, MessageSquare, CheckCircle2 } from "lucide-react";
 import { createEntry, Account, Category } from "@/lib/actions/accounting.actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isOpen: boolean;
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accounts, categories }: Props) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     account_id: "",
@@ -23,12 +26,28 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
     remarks: "",
   });
 
+  // Filter active accounts and categories
+  const activeAccounts = accounts.filter(a => a.status === "Active");
+  const activeCategories = categories.filter(c => c.status === "Active" && c.type === type);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        account_id: "",
+        category_id: "",
+        amount: "",
+        date: new Date().toISOString().split("T")[0],
+        remarks: "",
+      });
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.account_id || !formData.category_id || !formData.amount || !formData.date) {
-      alert("Please fill all required fields.");
+      toast.error("Please fill all required fields.");
       return;
     }
 
@@ -39,9 +58,11 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
         amount: parseFloat(formData.amount),
         type,
       });
+      toast.success(`${type} recorded successfully`);
       onSuccess();
+      router.refresh();
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -53,61 +74,77 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
         <div className={`p-6 flex items-center justify-between border-b border-slate-100 ${
           type === "Income" ? "bg-emerald-50/50" : "bg-rose-50/50"
         }`}>
-          <h3 className={`text-lg font-bold ${type === "Income" ? "text-emerald-700" : "text-rose-700"}`}>
-            Add {type}
-          </h3>
+          <div>
+            <h3 className={`text-lg font-bold ${type === "Income" ? "text-emerald-700" : "text-rose-700"}`}>
+              Record {type}
+            </h3>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
+              Enter transaction details below
+            </p>
+          </div>
           <button onClick={onClose} className="p-2 hover:bg-white rounded-full transition-colors">
             <X size={20} className="text-slate-400" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Account *</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <Wallet size={12} className="text-[#3da9d4]" /> Select Account *
+            </label>
             <select 
               required
-              className="input-primary"
+              className="input-primary h-11 appearance-none bg-white font-bold text-sm"
               value={formData.account_id}
               onChange={(e) => setFormData({...formData, account_id: e.target.value})}
             >
               <option value="">Select Account</option>
-              {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+              {activeAccounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
             </select>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Category *</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <Tag size={12} className="text-[#3da9d4]" /> Select Category *
+            </label>
             <select 
               required
-              className="input-primary"
+              className="input-primary h-11 appearance-none bg-white font-bold text-sm"
               value={formData.category_id}
               onChange={(e) => setFormData({...formData, category_id: e.target.value})}
             >
               <option value="">Select Category</option>
-              {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+              {activeCategories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Amount *</label>
-              <input 
-                required
-                type="number"
-                min="0.01"
-                step="0.01"
-                placeholder="0.00"
-                className="input-primary"
-                value={formData.amount}
-                onChange={(e) => setFormData({...formData, amount: e.target.value})}
-              />
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+                Amount *
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+                <input 
+                  required
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0.00"
+                  className="input-primary h-11 pl-7 font-black text-slate-800"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                />
+              </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Date *</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+                <Calendar size={12} className="text-slate-400" /> Date *
+              </label>
               <input 
                 required
                 type="date"
-                className="input-primary"
+                className="input-primary h-11 font-bold text-sm"
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
               />
@@ -115,11 +152,13 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Remarks</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <MessageSquare size={12} className="text-slate-400" /> Remarks
+            </label>
             <textarea 
-              rows={3}
-              placeholder="Optional notes..."
-              className="input-primary resize-none"
+              rows={2}
+              placeholder="What is this for?"
+              className="input-primary resize-none py-2.5 text-sm font-medium"
               value={formData.remarks}
               onChange={(e) => setFormData({...formData, remarks: e.target.value})}
             />
@@ -128,11 +167,20 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className={`w-full py-3.5 rounded-xl text-white font-bold text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${
-              type === "Income" ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200" : "bg-rose-600 hover:bg-rose-700 shadow-rose-200"
+            className={`w-full py-4 rounded-2xl text-white font-bold text-sm shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 mt-2 ${
+              type === "Income" 
+                ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100" 
+                : "bg-rose-600 hover:bg-rose-700 shadow-rose-100"
             }`}
           >
-            {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : `Save ${type}`}
+            {isSubmitting ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              <>
+                <CheckCircle2 size={18} />
+                Save {type} Entry
+              </>
+            )}
           </button>
         </form>
       </div>

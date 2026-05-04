@@ -24,7 +24,6 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  History,
   PhoneCall,
   RefreshCw,
   Info,

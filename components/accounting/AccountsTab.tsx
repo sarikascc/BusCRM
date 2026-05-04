@@ -18,6 +18,7 @@ const getErrorMessage = (error: unknown) =>
 export default function AccountsTab({ initialAccounts }: Props) {
   const [accounts, setAccounts] = useState(initialAccounts);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
@@ -30,6 +31,16 @@ export default function AccountsTab({ initialAccounts }: Props) {
   const filteredAccounts = accounts.filter((acc) =>
     acc.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleEdit = (account: Account) => {
+    setSelectedAccount(account);
+    setIsModalOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setSelectedAccount(null);
+    setIsModalOpen(true);
+  };
 
   const handleDelete = async () => {
     if (!accountToDelete) return;
@@ -51,7 +62,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center gap-4 bg-white sticky top-0 z-10">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleAddNew}
           className="flex items-center gap-2 px-4 py-2.5 bg-brand text-white rounded-xl text-sm font-bold hover:bg-brand-hover transition-all shadow-sm"
         >
           <Plus size={18} /> Add Account
@@ -97,17 +108,15 @@ export default function AccountsTab({ initialAccounts }: Props) {
                     <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">{mounted ? formatCurrency(acc.total_out) : `₹${acc.total_out}`}</td>,
                     <td key="balance" className="px-6 py-4 text-sm text-right font-black text-[#3da9d4]">{mounted ? formatCurrency(acc.current_balance) : `₹${acc.current_balance}`}</td>,
                     <td key="status" className="px-6 py-4 text-center">
-                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                        acc.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
-                      }`}>
+                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${acc.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
+                        }`}>
                         {acc.status}
                       </span>
                     </td>,
                     <td key="actions" className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2 opacity-100">
-                        <button className="p-1.5 text-slate-400 hover:text-[#3da9d4] transition-colors"><Eye size={16} /></button>
-                        <button className="p-1.5 text-slate-400 hover:text-[#3da9d4] transition-colors"><Edit2 size={16} /></button>
-                        <button onClick={() => setAccountToDelete(acc)} className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"><Trash2 size={16} /></button>
+                        <button onClick={() => handleEdit(acc)} className="p-1.5 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                        <button onClick={() => setAccountToDelete(acc)} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
                       </div>
                     </td>,
                   ]
@@ -121,6 +130,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
       {isModalOpen && (
         <AddAccountModal
           isOpen={isModalOpen}
+          account={selectedAccount}
           onClose={() => setIsModalOpen(false)}
           onSuccess={async () => {
             const updated = await getAccounts();

@@ -17,6 +17,7 @@ const getErrorMessage = (error: unknown) =>
 export default function CategoriesTab({ initialCategories }: Props) {
   const [categories, setCategories] = useState(initialCategories);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [search, setSearch] = useState("");
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -24,6 +25,16 @@ export default function CategoriesTab({ initialCategories }: Props) {
   const filteredCategories = categories.filter((cat) =>
     cat.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleEdit = (category: Category) => {
+    setSelectedCategory(category);
+    setIsModalOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setSelectedCategory(null);
+    setIsModalOpen(true);
+  };
 
   const handleDelete = async () => {
     if (!categoryToDelete) return;
@@ -45,7 +56,7 @@ export default function CategoriesTab({ initialCategories }: Props) {
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center gap-4 bg-white sticky top-0 z-10">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleAddNew}
           className="flex items-center gap-2 px-4 py-2.5 bg-brand text-white rounded-xl text-sm font-bold hover:bg-brand-hover transition-all shadow-sm"
         >
           <Plus size={18} /> Add Category
@@ -99,8 +110,8 @@ export default function CategoriesTab({ initialCategories }: Props) {
                     </td>,
                     <td key="actions" className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2  transition-opacity">
-                        <button className="p-1.5 text-slate-400 hover:text-[#3da9d4] transition-colors"><Edit2 size={16} /></button>
-                        <button onClick={() => setCategoryToDelete(cat)} className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"><Trash2 size={16} /></button>
+                        <button onClick={() => handleEdit(cat)} className="p-1.5 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                        <button onClick={() => setCategoryToDelete(cat)} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
                       </div>
                     </td>,
                   ]
@@ -114,6 +125,7 @@ export default function CategoriesTab({ initialCategories }: Props) {
       {isModalOpen && (
         <AddCategoryModal
           isOpen={isModalOpen}
+          category={selectedCategory}
           onClose={() => setIsModalOpen(false)}
           onSuccess={async () => {
             const updated = await getCategories();

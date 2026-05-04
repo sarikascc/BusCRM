@@ -36,10 +36,7 @@ export async function createOperator(data: Omit<Operator, "id" | "created_at" | 
     .select()
     .single();
 
-  if (error) {
-    console.error("Error creating operator:", error);
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   revalidatePath("/operators");
   return newOperator;
 }
@@ -48,23 +45,16 @@ export async function updateOperator(id: string, data: Partial<Operator>) {
   const supabase = await createClient();
   const { error } = await supabase
     .from("operators")
-    .update({ ...data, updated_at: new Date().toISOString() })
+    .update(data)
     .eq("id", id);
 
-  if (error) {
-    console.error("Error updating operator:", error);
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   revalidatePath("/operators");
 }
 
 export async function deleteOperator(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("operators").delete().eq("id", id);
-
-  if (error) {
-    console.error("Error deleting operator:", error);
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   revalidatePath("/operators");
 }

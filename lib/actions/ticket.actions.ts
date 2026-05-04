@@ -6,9 +6,7 @@ import { revalidatePath } from "next/cache";
 export interface CreateTicketPayload {
   operator_id?: string;
   pickup_city_id: string;
-  pickup_area: string;
   drop_city_id: string;
-  drop_location: string;
   journey_date: string;
   booking_date?: string;
   passenger_name: string;
@@ -22,6 +20,31 @@ export interface CreateTicketPayload {
   account_id?: string;
   payment_type?: "Cash" | "UPI";
   amount?: number;
+}
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+async function getOrCreateCategory(supabase: SupabaseServerClient) {
+  const { data: category, error: catError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("name", "Ticket Booking")
+    .eq("type", "Income")
+    .single();
+
+  if (catError || !category) {
+    const { data: newCat, error: newCatError } = await supabase
+      .from("categories")
+      .insert([{ name: "Ticket Booking", type: "Income", status: "Active" }])
+      .select()
+      .single();
+    if (newCatError) {
+      console.error("Error creating category:", newCatError);
+      return null;
+    }
+    return newCat?.id;
+  }
+  return category.id;
 }
 
 export async function createTicketBooking(data: CreateTicketPayload) {
@@ -47,41 +70,18 @@ export async function createTicketBooking(data: CreateTicketPayload) {
   // --- Sync with Accounting ---
   if (data.account_id && data.amount && data.amount > 0) {
     try {
-      // 1. Get or Create "Ticket Booking" Category
-      let categoryId;
-      const { data: category, error: catError } = await supabase
-        .from("categories")
-        .select("id")
-        .eq("name", "Ticket Booking")
-        .eq("type", "Income")
-        .single();
-
-      if (catError || !category) {
-        const { data: newCat, error: newCatError } = await supabase
-          .from("categories")
-          .insert([{ name: "Ticket Booking", type: "Income", status: "Active" }])
-          .select()
-          .single();
-        if (newCatError) console.error("Error creating category:", newCatError);
-        categoryId = newCat?.id;
-      } else {
-        categoryId = category.id;
-      }
-
-      // 2. Create Entry
+      const categoryId = await getOrCreateCategory(supabase);
       if (categoryId) {
-        const { error: entryError } = await supabase.from("entries").insert([
+        await supabase.from("entries").insert([
           {
             account_id: data.account_id,
             category_id: categoryId,
             amount: data.amount,
             type: "Income",
             date: data.booking_date || new Date().toISOString().split("T")[0],
-            remarks: `Ticket Booking: ${data.passenger_name} (${data.ticket_number || "No Ticket #"})`,
+            remarks: `Ticket Booking: ${data.passenger_name} [TID:${newTicket.id}]`,
           },
         ]);
-
-        if (entryError) console.error("Error creating accounting entry:", entryError);
       }
     } catch (accError) {
       console.error("Accounting sync failed:", accError);
@@ -90,6 +90,7 @@ export async function createTicketBooking(data: CreateTicketPayload) {
 
   revalidatePath("/ticket-booking");
   revalidatePath("/accounting");
+  revalidatePath("/operators");
   return newTicket;
 }
 
@@ -101,7 +102,7 @@ export async function getTicketBookings() {
       *,
       pickup_city:cities!pickup_city_id(name),
       drop_city:cities!drop_city_id(name),
-      operator:operators(operator_name),
+      operator:operators(operator_name, mobile_number, commission_percentage),
       account:accounts(name)
     `)
     .order("created_at", { ascending: false });
@@ -116,6 +117,13 @@ export async function getTicketBookings() {
 
 export async function deleteTicketBooking(id: string) {
   const supabase = await createClient();
+
+  // Delete associated entry first
+  await supabase
+    .from("entries")
+    .delete()
+    .ilike("remarks", `%[TID:${id}]%`);
+
   const { error } = await supabase
     .from("ticket_bookings")
     .delete()
@@ -127,4 +135,75 @@ export async function deleteTicketBooking(id: string) {
   }
 
   revalidatePath("/ticket-booking");
+  revalidatePath("/accounting");
+}
+
+export async function updateTicketBooking(id: string, data: Partial<CreateTicketPayload>) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("ticket_bookings")
+    .update(data)
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating ticket:", error);
+    throw new Error(error.message);
+  }
+
+  // --- Sync with Accounting ---
+  // Get full ticket data for sync
+  const { data: ticket } = await supabase
+    .from("ticket_bookings")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (ticket && ticket.account_id && ticket.amount > 0) {
+    try {
+      const categoryId = await getOrCreateCategory(supabase);
+      if (categoryId) {
+        // Try to find existing entry
+        const { data: existingEntry } = await supabase
+          .from("entries")
+          .select("id")
+          .ilike("remarks", `%[TID:${id}]%`)
+          .single();
+
+        if (existingEntry) {
+          await supabase
+            .from("entries")
+            .update({
+              account_id: ticket.account_id,
+              amount: ticket.amount,
+              date: ticket.booking_date || ticket.created_at.split("T")[0],
+              remarks: `Ticket Booking: ${ticket.passenger_name} [TID:${id}]`,
+            })
+            .eq("id", existingEntry.id);
+        } else {
+          // Create if not exists
+          await supabase.from("entries").insert([
+            {
+              account_id: ticket.account_id,
+              category_id: categoryId,
+              amount: ticket.amount,
+              type: "Income",
+              date: ticket.booking_date || ticket.created_at.split("T")[0],
+              remarks: `Ticket Booking: ${ticket.passenger_name} [TID:${id}]`,
+            },
+          ]);
+        }
+      }
+    } catch (accError) {
+      console.error("Accounting sync failed during update:", accError);
+    }
+  } else if (ticket && (!ticket.account_id || ticket.amount <= 0)) {
+    // If account removed or amount is 0, remove entry
+    await supabase
+      .from("entries")
+      .delete()
+      .ilike("remarks", `%[TID:${id}]%`);
+  }
+  revalidatePath("/ticket-booking");
+  revalidatePath("/accounting");
+  revalidatePath("/operators");
 }
