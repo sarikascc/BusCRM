@@ -374,8 +374,49 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                       key={settlement.id}
                       className="group bg-slate-50/50 hover:bg-white p-5 rounded-[1.5rem] border border-slate-100 hover:border-brand/20 transition-all hover:shadow-lg hover:shadow-brand/5 relative overflow-hidden"
                     >
+                    
+
+
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-                        <div className="space-y-1">
+
+
+
+  {/* Receiver details */}
+                      <div className="pb-4 border-t border-slate-100/50 grid grid-cols-2 lg:grid-cols-2 gap-4 bg-slate-100 p-4 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
+                            <User size={12} className="text-slate-400" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Received By</p>
+                            <p className="text-[10px] font-bold text-slate-700">{settlement.received_by || "N/A"}</p>
+                          </div>
+                        </div>
+
+                         <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
+                            <Phone size={12} className="text-slate-400" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contact</p>
+                            <p className="text-[10px] font-bold text-slate-700">{settlement.receiver_mobile || "N/A"}</p>
+                          </div>
+                        </div>
+                       
+                        {settlement.reference_number && (
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
+                              <Clock size={12} className="text-slate-400" />
+                            </div>
+                            <div>
+                              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Reference</p>
+                              <p className="text-[11px] font-bold text-slate-700 truncate max-w-[120px]">{settlement.reference_number}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                        <div className="space-y-1 bg-slate-100 p-4 rounded-lg">
                           <div className="flex items-center gap-3">
                             <span className="text-xs font-black text-brand uppercase tracking-tighter">
                               #{settlement.id.slice(0, 8).toUpperCase()}
@@ -399,7 +440,12 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-8">
+                        <div className="flex items-center p-4  bg-slate-100 p-4 rounded-lg gap-8">
+                           <div className="hidden lg:block">
+                            <div className="p-2.5 bg-white rounded-xl border border-slate-100 text-slate-400 group-hover:text-brand group-hover:border-brand/30 transition-all shadow-sm">
+                              <Receipt size={18} />
+                            </div>
+                          </div>
                           <div className="text-right">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Paid Out</p>
                             <p className="text-xl font-black text-slate-900 tracking-tighter">₹{settlement.paid_amount.toLocaleString()}</p>
@@ -411,46 +457,11 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                             </div>
                           </div>
 
-                          <div className="hidden lg:block">
-                            <div className="p-2.5 bg-white rounded-xl border border-slate-100 text-slate-400 group-hover:text-brand group-hover:border-brand/30 transition-all shadow-sm">
-                              <Receipt size={18} />
-                            </div>
-                          </div>
+                         
                         </div>
                       </div>
 
-                      {/* Receiver details */}
-                      <div className="mt-4 pt-4 border-t border-slate-100/50 grid grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                            <User size={12} className="text-slate-400" />
-                          </div>
-                          <div>
-                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Received By</p>
-                            <p className="text-[11px] font-bold text-slate-700">{settlement.received_by || "N/A"}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                            <Phone size={12} className="text-slate-400" />
-                          </div>
-                          <div>
-                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Contact</p>
-                            <p className="text-[11px] font-bold text-slate-700">{settlement.receiver_mobile || "N/A"}</p>
-                          </div>
-                        </div>
-                        {settlement.reference_number && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                              <Clock size={12} className="text-slate-400" />
-                            </div>
-                            <div>
-                              <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Reference</p>
-                              <p className="text-[11px] font-bold text-slate-700 truncate max-w-[120px]">{settlement.reference_number}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+
                     </div>
                   ))}
                 </div>
@@ -584,8 +595,8 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                             type="button"
                             onClick={() => setSettlementForm(prev => ({ ...prev, paymentMethod: method }))}
                             className={`py-2.5 rounded-xl text-xs font-black transition-all ${settlementForm.paymentMethod === method
-                                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
-                                : "text-slate-500 hover:bg-white hover:text-slate-700"
+                              ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
+                              : "text-slate-500 hover:bg-white hover:text-slate-700"
                               }`}
                           >
                             {method}

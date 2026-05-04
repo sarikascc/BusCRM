@@ -570,11 +570,11 @@ export default function TicketBookingList({
                   <td className="px-6 py-4 text-center">
                     <div className="flex flex-col">
                       <span className="text-sm font-black text-slate-800">
-                        {ticket.seat_numbers}
+                        {ticket.seat_numbers}  / {ticket.total_seats}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-                        TOTAL SEATS: {ticket.total_seats}
-                      </span>
+                      {/* <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+                        TOTAL SEATS:
+                      </span> */}
                     </div>
                   </td>
                   <td className="px-6 py-4">
