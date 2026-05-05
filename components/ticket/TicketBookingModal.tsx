@@ -632,10 +632,10 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                   )}
                 </div>
 
-                {/* Passenger Name */}
+                {/* Customer Name */}
                 <div>
                   <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Passenger Name *
+                    Customer Name *
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
