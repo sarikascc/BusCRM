@@ -93,8 +93,8 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
   };
 
   const handleProcessSettlementSubmit = async () => {
-    if (!settlementForm.accountId || !settlementForm.receivedBy || !settlementForm.receiverMobile) {
-      toast.error("Please fill all required fields");
+    if (!settlementForm.receiverMobile) {
+      toast.error("Please fill  receiver details");
       return;
     }
 
@@ -484,17 +484,17 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
         {/* Settlement Form Overlay */}
         {isSettlementFormOpen && (
           <div className="fixed inset-0 z-[130] flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 border border-slate-100 flex flex-col max-h-[90vh]">
+            <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 border border-slate-100 flex flex-col max-h-[90vh]">
 
               {/* Form Header */}
-              <div className="p-8 pb-4 flex items-center justify-between">
+              <div className="p-5 pb-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 border border-emerald-100">
+                  <div className="w-12 h-12 bg-emerald-50 rounded-[15px] flex items-center justify-center text-emerald-600 border border-emerald-100">
                     <Receipt size={24} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-slate-800">Operator Settlement</h3>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{selectedTicketIds.length} TICKETS SELECTED</p>
+                    <h3 className="text-[18px] font-bold text-slate-800">Operator Settlement</h3>
+                    <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{selectedTicketIds.length} TICKETS SELECTED</p>
                   </div>
                 </div>
                 <button onClick={() => setIsSettlementFormOpen(false)} className="w-10 h-10 flex items-center justify-center hover:bg-slate-50 rounded-full transition-all text-slate-400">
@@ -504,45 +504,45 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
               <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
                 {/* Left Side: Summary & Selection Info */}
-                <div className="w-full lg:w-96 bg-slate-50/50 p-8 border-r border-slate-100 overflow-y-auto custom-scrollbar">
-                  <div className="space-y-8">
+                <div className="w-full lg:w-100 bg-slate-50/50 p-5 border-r border-slate-100 overflow-y-auto custom-scrollbar">
+                  <div className="space-y-5">
                     {/* Operator Name Card */}
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">OPERATOR</p>
-                      <h4 className="text-2xl font-black text-slate-800 tracking-tight">{operator.operator_name}</h4>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">OPERATOR</p>
+                      <h4 className="text-2xl font-bold text-slate-900 tracking-wider">{operator.operator_name}</h4>
                     </div>
 
                     {/* Financial Summary Grid */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">TOTAL SALES</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">TOTAL SALES</p>
                         <p className="text-lg font-black text-slate-900">₹{(unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0)).toLocaleString()}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-[#3da9d4] uppercase tracking-widest">COMMISSION</p>
+                        <p className="text-[10px] font-bold text-[#3da9d4] uppercase tracking-wide mb-1.5 ml-1">COMMISSION</p>
                         <p className="text-lg font-black text-[#3da9d4]">{operator.commission_percentage}%</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">COMM. AMOUNT</p>
+                        <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide mb-1.5 ml-1">COMM. AMOUNT</p>
                         <p className="text-lg font-black text-emerald-600">₹{((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100).toLocaleString()}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">PAYABLE</p>
+                        <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wide mb-1.5 ml-1">PAYABLE</p>
                         <p className="text-lg font-black text-rose-600">₹{(unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) - ((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100)).toLocaleString()}</p>
                       </div>
                     </div>
 
                     {/* Mini Ticket List */}
                     <div className="space-y-3 pt-4 border-t border-slate-200">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">SELECTED TICKETS</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">SELECTED TICKETS</p>
                       <div className="space-y-2">
                         {unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).map(ticket => (
-                          <div key={ticket.id} className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                          <div key={ticket.id} className="bg-white p-3 rounded-[11px] border border-slate-200 shadow-sm flex items-center justify-between">
                             <div>
-                              <p className="text-[11px] font-black text-slate-800">{ticket.passenger_name}</p>
-                              <p className="text-[9px] text-slate-400 font-bold uppercase">{ticket.ticket_number || "NO-TKT"}</p>
+                              <p className="text-[11px] font-bold text-slate-900">{ticket.passenger_name}</p>
+                              <p className="text-[9px] text-slate-600 font-bold uppercase tracking-wider">{ticket.ticket_number || "NO-TKT"}</p>
                             </div>
-                            <p className="text-[11px] font-black text-emerald-600">₹{ticket.amount.toLocaleString()}</p>
+                            <p className="text-[11px] font-bold text-emerald-600">₹{ticket.amount.toLocaleString()}</p>
                           </div>
                         ))}
                       </div>
@@ -551,72 +551,35 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                 </div>
 
                 {/* Right Side: Payment Form Inputs */}
-                <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
+                <div className="flex-1 p-5 overflow-y-auto custom-scrollbar">
                   <div className="space-y-6">
-                    {/* Account Selection */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">PAYMENT ACCOUNT *</label>
-                      <div className="relative">
-                        <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <select
-                          value={settlementForm.accountId}
-                          onChange={(e) => setSettlementForm(prev => ({ ...prev, accountId: e.target.value }))}
-                          className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all appearance-none shadow-sm"
-                        >
-                          <option value="">Select Account</option>
-                          {accounts.map(acc => (
-                            <option key={acc.id} value={acc.id}>{acc.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Payment Method Toggle */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">PAYMENT METHOD</label>
-                      <div className="grid grid-cols-3 gap-3 p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
-                        {(["Cash", "UPI", "Bank Transfer"] as const).map((method) => (
-                          <button
-                            key={method}
-                            type="button"
-                            onClick={() => setSettlementForm(prev => ({ ...prev, paymentMethod: method }))}
-                            className={`py-2.5 rounded-xl text-xs font-black transition-all ${settlementForm.paymentMethod === method
-                              ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
-                              : "text-slate-500 hover:bg-white hover:text-slate-700"
-                              }`}
-                          >
-                            {method}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                  
 
                     {/* Receiver Info Section Header */}
                     <div className="pt-2">
-                      <p className="text-[10px] font-black text-[#3da9d4] uppercase tracking-[0.2em] mb-4">MANUAL RECEIVER DETAILS</p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">RECEIVED BY *</label>
+                          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide ml-1">RECEIVED BY *</label>
                           <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <input
                               type="text"
                               value={settlementForm.receivedBy}
                               onChange={(e) => setSettlementForm(prev => ({ ...prev, receivedBy: e.target.value }))}
-                              className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
+                              className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-[11px] text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
                               placeholder="Enter name of person receiving payment"
                             />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">RECEIVER MOBILE *</label>
+                          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide ml-1">RECEIVER MOBILE *</label>
                           <div className="relative">
                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <input
                               type="text"
                               value={settlementForm.receiverMobile}
                               onChange={(e) => setSettlementForm(prev => ({ ...prev, receiverMobile: e.target.value }))}
-                              className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
+                              className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-[11px] text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
                               placeholder="Enter mobile number"
                             />
                           </div>
@@ -626,12 +589,12 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
                     {/* Reference and Remarks */}
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">REFERENCE / REMARKS</label>
+                      <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide ml-1">REFERENCE / REMARKS</label>
                       <input
                         type="text"
                         value={settlementForm.referenceNumber}
                         onChange={(e) => setSettlementForm(prev => ({ ...prev, referenceNumber: e.target.value }))}
-                        className="w-full h-12 px-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
+                        className="w-full h-12 px-4 bg-white border border-slate-200 rounded-[11px] text-sm font-bold focus:ring-4 focus:ring-[#3da9d4]/10 focus:border-[#3da9d4] outline-none transition-all shadow-sm"
                         placeholder="Transaction ID / Remarks"
                       />
                     </div>
@@ -639,8 +602,8 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                     {/* Payment Amounts */}
                     <div className="pt-2">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">AMOUNT *</label>
-                        <div className="w-full h-12 px-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center">
+                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide  ml-1">AMOUNT *</label>
+                        <div className="w-full h-12 px-4 bg-emerald-50 rounded-[11px] border border-emerald-100 flex items-center">
                           <span className="text-sm font-black text-emerald-600">
                             ₹{(unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) - ((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100)).toLocaleString()}
                           </span>
@@ -652,10 +615,10 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
               </div>
 
               {/* Form Footer */}
-              <div className="p-8 bg-white border-t border-slate-100 flex items-center justify-between">
+              <div className="p-6 bg-white border-t border-slate-100 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">TOTAL PAYABLE</p>
-                  <p className="text-3xl font-black text-rose-600 tracking-tighter">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide  ml-1">TOTAL PAYABLE</p>
+                  <p className="text-2xl font-black text-rose-600">
                     ₹{(unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) - ((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100)).toLocaleString()}
                   </p>
                 </div>
@@ -664,7 +627,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                   <button
                     disabled={isSettling}
                     onClick={handleProcessSettlementSubmit}
-                    className="h-14 px-10 bg-emerald-600 text-white rounded-2xl font-black text-sm hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100 flex items-center gap-3 disabled:opacity-50"
+                    className="h-11 px-10 bg-emerald-600 text-white rounded-[15px] font-bold text-sm hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100 flex items-center gap-3 disabled:opacity-50"
                   >
                     {isSettling ? <Loader2 size={20} className="animate-spin" /> : <Banknote size={20} />}
                     Settle Now

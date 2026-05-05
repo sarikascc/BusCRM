@@ -88,7 +88,13 @@ export default function AccountsTab({ initialAccounts }: Props) {
       <div className="flex-1 overflow-auto custom-scrollbar">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 bg-white z-10">
-            <tr className="border-b border-slate-100"><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Account Name</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Opening Balance</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total In</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total Out</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Current Balance</th><th className="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
+            <tr className="border-b border-slate-100"><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Account Name</th>
+            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Opening Balance</th>
+            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total In</th>
+            {/* <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total Out</th> */}
+            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Current Balance</th>
+            <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {filteredAccounts.length === 0 ? (
@@ -105,7 +111,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
                     <td key="name" className="px-6 py-4 text-sm text-slate-800 font-bold">{acc.name}</td>,
                     <td key="opening" className="px-6 py-4 text-sm text-right text-slate-600">{mounted ? formatCurrency(acc.opening_balance) : `₹${acc.opening_balance}`}</td>,
                     <td key="in" className="px-6 py-4 text-sm text-right text-emerald-600 font-bold">{mounted ? formatCurrency(acc.total_in) : `₹${acc.total_in}`}</td>,
-                    <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">{mounted ? formatCurrency(acc.total_out) : `₹${acc.total_out}`}</td>,
+                    // <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">{mounted ? formatCurrency(acc.total_out) : `₹${acc.total_out}`}</td>,
                     <td key="balance" className="px-6 py-4 text-sm text-right font-black text-[#3da9d4]">{mounted ? formatCurrency(acc.current_balance) : `₹${acc.current_balance}`}</td>,
                     <td key="status" className="px-6 py-4 text-center">
                       <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${acc.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"

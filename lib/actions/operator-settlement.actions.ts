@@ -12,7 +12,7 @@ export interface SettlementPayload {
   payable_amount: number;
   paid_amount: number;
   payment_method: "Cash" | "UPI" | "Bank Transfer";
-  account_id: string; // The account from which payment is made
+  account_id: string;
   received_by: string;
   receiver_mobile: string;
   reference_number?: string;
@@ -68,7 +68,7 @@ export async function processSettlement(data: SettlementPayload) {
 
   const { data: tickets, error: ticketFetchError } = await supabase
     .from("ticket_bookings")
-    .select("id, operator_id, settlement_id")
+    .select("id, operator_id, settlement_id, amount")
     .in("id", data.ticket_ids);
 
   if (ticketFetchError) throw new Error(ticketFetchError.message);
@@ -84,7 +84,7 @@ export async function processSettlement(data: SettlementPayload) {
   if (hasInvalidTicket) {
     throw new Error("Selected tickets must be unsettled and belong to the same operator.");
   }
-  
+
   // 1. Create Settlement Record
   const { data: settlement, error: sError } = await supabase
     .from("operator_settlements")
@@ -111,7 +111,7 @@ export async function processSettlement(data: SettlementPayload) {
   // 2. Update Tickets with settlement ID and snapshot data
   const { error: tError } = await supabase
     .from("ticket_bookings")
-    .update({ 
+    .update({
       settlement_id: settlement.id,
       paid_to_operator_name: data.received_by,
       paid_to_operator_mobile: data.receiver_mobile,
@@ -124,39 +124,21 @@ export async function processSettlement(data: SettlementPayload) {
     throw new Error(tError.message);
   }
 
-  // 3. Create Accounting Entry (Expense)
-  // Find or Create "Operator Settlement" Category
-  let categoryId;
-  const { data: category } = await supabase
-    .from("categories")
-    .select("id")
-    .eq("name", "Operator Settlement")
-    .eq("type", "Expense")
-    .single();
+  // 3. Deduct Operator Payable from Income Entries
+  // The remaining amount in the system should be the final income (commission automatically retained)
+  for (const ticket of tickets) {
+    if (ticket.amount && ticket.amount > 0) {
+      const finalIncomeAmount = (ticket.amount * data.commission_percentage) / 100;
 
-  if (!category) {
-    const { data: newCat } = await supabase
-      .from("categories")
-      .insert([{ name: "Operator Settlement", type: "Expense", status: "Active" }])
-      .select()
-      .single();
-    categoryId = newCat?.id;
-  } else {
-    categoryId = category.id;
-  }
+      const { error: entryUpdateError } = await supabase
+        .from("entries")
+        .update({ amount: finalIncomeAmount })
+        .ilike("remarks", `%[TID:${ticket.id}]%`);
 
-  if (categoryId) {
-    const { error: eError } = await supabase.from("entries").insert([
-      {
-        account_id: data.account_id,
-        category_id: categoryId,
-        amount: data.paid_amount,
-        type: "Expense",
-        date: new Date().toISOString().split("T")[0],
-        remarks: `Operator Settlement: ${settlement.id}`,
-      },
-    ]);
-    if (eError) console.error("Accounting sync failed:", eError);
+      if (entryUpdateError) {
+        console.error(`Failed to update entry for ticket ${ticket.id}:`, entryUpdateError);
+      }
+    }
   }
 
   revalidatePath("/ticket-booking");
@@ -167,7 +149,7 @@ export async function processSettlement(data: SettlementPayload) {
 
 export async function getOperatorSettlements(operatorId?: string) {
   const supabase = await createClient();
-  
+
   // 1. Fetch settlements
   let settlementQuery = supabase
     .from("operator_settlements")
@@ -182,7 +164,7 @@ export async function getOperatorSettlements(operatorId?: string) {
   }
 
   const { data: settlements, error: sError } = await settlementQuery;
-  
+
   if (sError) {
     console.error(`Error fetching settlements: ${sError.message}`);
     return [];

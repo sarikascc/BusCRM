@@ -306,8 +306,8 @@ export default function TicketBookingList({
       return;
     }
 
-    if (!settlementForm.accountId || !settlementForm.receivedBy || !settlementForm.receiverMobile) {
-      toast.error("Please fill settlement account and receiver details.");
+    if ( !settlementForm.receiverMobile) {
+      toast.error("Please fill settlement  receiver details.");
       return;
     }
 
@@ -684,15 +684,15 @@ export default function TicketBookingList({
 
       {isSettlementOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95">
             <div className="p-5 flex items-center justify-between border-b border-slate-100 bg-slate-50/70">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <Wallet className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-800">Operator Settlement</h3>
-                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                  <h3 className="text-[20px] font-bold text-slate-800">Operator Settlement</h3>
+                  <p className="text-[11px] text-slate-500 font-bold uppercase tracking-widest">
                     {selectedTickets.length} tickets selected
                   </p>
                 </div>
@@ -708,28 +708,28 @@ export default function TicketBookingList({
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                  <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                  <div className="text-[11px] text-slate-500 font-bold uppercase tracking-widest">
                     Operator
                   </div>
-                  <div className="mt-1 text-lg font-black text-slate-800">
+                  <div className="mt-1 text-[20px] font-bold text-slate-800">
                     {selectedOperator?.operator_name || "Selected Operator"}
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-3">
                     <div>
-                      <div className="text-[10px] text-slate-500 font-bold uppercase">Total Sales</div>
-                      <div className="text-base font-black text-slate-800">Rs. {totalAmount.toLocaleString()}</div>
+                      <div className="text-[11px] text-slate-500 font-bold uppercase">Total Sales</div>
+                      <div className="text-[20px] font-bold text-slate-800">Rs. {totalAmount.toLocaleString()}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-slate-500 font-bold uppercase">Commission</div>
-                      <div className="text-base font-black text-[#3da9d4]">{commissionPercentage}%</div>
+                      <div className="text-[11px] text-slate-500 font-bold uppercase">Commission</div>
+                      <div className="text-[20px] font-bold text-[#3da9d4]">{commissionPercentage}%</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-slate-500 font-bold uppercase">Comm. Amount</div>
-                      <div className="text-base font-black text-emerald-600">Rs. {commissionAmount.toLocaleString()}</div>
+                      <div className="text-[11px] text-slate-500 font-bold uppercase">Comm. Amount</div>
+                      <div className="text-[20px] font-bold text-emerald-600">Rs. {commissionAmount.toLocaleString()}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] text-slate-500 font-bold uppercase">Payable</div>
-                      <div className="text-base font-black text-rose-600">Rs. {payableAmount.toLocaleString()}</div>
+                      <div className="text-[11px] text-slate-500 font-bold uppercase">Payable</div>
+                      <div className="text-[20px] font-bold text-rose-600">Rs. {payableAmount.toLocaleString()}</div>
                     </div>
                   </div>
                 </div>
@@ -752,60 +752,12 @@ export default function TicketBookingList({
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Payment Account *
-                  </label>
-                  <div className="relative">
-                    <Receipt className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <select
-                      value={settlementForm.accountId}
-                      onChange={(e) =>
-                        setSettlementForm((current) => ({ ...current, accountId: e.target.value }))
-                      }
-                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 appearance-none bg-white font-bold"
-                    >
-                      <option value="">Select Account</option>
-                      {accounts
-                        .filter((account) => account.status !== "Inactive")
-                        .map((account) => (
-                          <option key={account.id} value={account.id}>
-                            {account.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Payment Method
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(["Cash", "UPI", "Bank Transfer"] as const).map((method) => (
-                      <button
-                        key={method}
-                        type="button"
-                        onClick={() =>
-                          setSettlementForm((current) => ({ ...current, paymentMethod: method }))
-                        }
-                        className={`h-10 rounded-lg border text-[11px] font-black transition-all ${settlementForm.paymentMethod === method
-                            ? "bg-emerald-600 text-white border-emerald-600"
-                            : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
-                          }`}
-                      >
-                        {method}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 mt-2">
-                  <p className="text-[10px] font-black text-[#3da9d4] uppercase tracking-[0.2em] mb-4">Manual Receiver Details</p>
+               
+                <div className="pt-2  mt-2">
                   
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                         Received By *
                       </label>
                       <div className="relative">
@@ -824,7 +776,7 @@ export default function TicketBookingList({
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                         Receiver Mobile *
                       </label>
                       <div className="relative">
@@ -845,7 +797,7 @@ export default function TicketBookingList({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                     Reference / Remarks
                   </label>
                   <input
@@ -861,7 +813,7 @@ export default function TicketBookingList({
 
                 <div className="pt-4 border-t border-slate-100">
                   <div className="space-y-2">
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                        Amount *
                     </label>
                     <div className="w-full h-10 px-4 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center">

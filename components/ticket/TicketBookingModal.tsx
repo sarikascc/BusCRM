@@ -557,10 +557,10 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[100vh]">
         <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
           <div>
-            <h3 className="text-lg font-bold text-slate-800">
-              {booking ? "Update Ticket Booking" : "New Ticket Booking"}
+            <h3 className="text-[20px] font-bold text-slate-800">
+              {booking ? "Update Ticket Booking" : "Ticket Booking"}
             </h3>
-            <p className="text-[12px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
+            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">
               {booking ? "Modify existing booking details" : "Fill in the details to book a seat"}
             </p>
           </div>
@@ -840,49 +840,29 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                  Select Account *
-                </label>
-                <div className="relative">
-                  <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <select
-                    required
-                    name="account_id"
-                    value={formDataState.account_id}
-                    onChange={handleInputChange}
-                    className="input-primary w-full text-sm h-10 rounded-lg pl-10 appearance-none bg-white font-bold"
-                  >
-                    <option value="">Select Account</option>
-                    {accounts.map((acc) => (
-                      <option key={acc.id} value={acc.id}>
-                        {acc.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+
               {/* Payment Type & Amount */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Payment Type *
+                    Select Account *
                   </label>
-                  <div className="flex rounded-lg border border-slate-200 p-1 bg-white h-10">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentType("Cash")}
-                      className={`flex-1 py-1 text-[12px] font-bold rounded-md transition-all flex items-center justify-center gap-1 ${paymentType === "Cash" ? "bg-[#3da9d4] text-white shadow-sm" : "text-slate-500 hover:bg-slate-50"}`}
+                  <div className="relative">
+                    <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <select
+                      required
+                      name="account_id"
+                      value={formDataState.account_id}
+                      onChange={handleInputChange}
+                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 appearance-none bg-white font-bold"
                     >
-                      Cash
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentType("UPI")}
-                      className={`flex-1 py-1 text-[12px] font-bold rounded-md transition-all flex items-center justify-center gap-1 ${paymentType === "UPI" ? "bg-[#3da9d4] text-white shadow-sm" : "text-slate-500 hover:bg-slate-50"}`}
-                    >
-                      UPI
-                    </button>
+                      <option value="">Select Account</option>
+                      {accounts.map((acc) => (
+                        <option key={acc.id} value={acc.id}>
+                          {acc.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div>
