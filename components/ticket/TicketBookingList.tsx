@@ -521,14 +521,16 @@ export default function TicketBookingList({
                     }`}
                 >
                   <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTicketIds.includes(ticket.id)}
-                      disabled={Boolean(ticket.settlement_id)}
-                      onChange={(e) => handleToggleTicket(ticket, e)}
-                      className="h-4 w-4 rounded border-slate-300 text-[#3da9d4] focus:ring-[#3da9d4] disabled:opacity-40"
-                      title={ticket.settlement_id ? "Already settled" : "Select ticket"}
-                    />
+                    {ticket.operator_id ? (
+                      <input
+                        type="checkbox"
+                        checked={selectedTicketIds.includes(ticket.id)}
+                        disabled={Boolean(ticket.settlement_id)}
+                        onChange={(e) => handleToggleTicket(ticket, e)}
+                        className="h-4 w-4 rounded border-slate-300 text-[#3da9d4] focus:ring-[#3da9d4] disabled:opacity-40"
+                        title={ticket.settlement_id ? "Already settled" : "Select ticket"}
+                      />
+                    ) : null}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
@@ -604,7 +606,11 @@ export default function TicketBookingList({
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    {ticket.settlement_id ? (
+                    {!ticket.operator_id ? (
+                      <span className="text-[10px] bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-black border border-blue-200 uppercase tracking-widest shadow-sm flex items-center gap-1 w-fit">
+                        <CheckCircle2 className="w-3 h-3" /> COLLECTED
+                      </span>
+                    ) : ticket.settlement_id ? (
                       <div className="flex flex-col">
                         <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">
                           <CheckCircle2 className="w-3 h-3" /> SETTLED

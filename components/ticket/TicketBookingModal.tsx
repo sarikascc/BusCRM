@@ -258,13 +258,13 @@ function OperatorSelector({
   return (
     <div ref={wrapperRef} className="relative">
       <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-        Operator *
+        Operator 
       </label>
       <input type="hidden" name="operator_id" value={selectedOperatorId} />
       <div className="relative">
         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
-          required
+          
           type="text"
           value={inputValue}
           autoComplete="off"
@@ -503,11 +503,11 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
       return;
     }
 
-    if (!formDataState.operator_id) {
-      toast.error("Please select a valid Operator.");
-      setIsSubmitting(false);
-      return;
-    }
+    // if (!formDataState.operator_id) {
+    //   toast.error("Please select a valid Operator.");
+    //   setIsSubmitting(false);
+    //   return;
+    // }
 
     const payload = {
       passenger_name: passengerName,
