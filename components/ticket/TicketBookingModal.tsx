@@ -257,17 +257,15 @@ function OperatorSelector({
 
   return (
     <div ref={wrapperRef} className="relative">
-      <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-        Operator 
-      </label>
+      <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">Operator *</label>
       <input type="hidden" name="operator_id" value={selectedOperatorId} />
       <div className="relative">
         <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
-          
           type="text"
           value={inputValue}
           autoComplete="off"
+          required
           onChange={(e) => {
             setSearch(e.target.value);
             onSelect("");
@@ -503,11 +501,11 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
       return;
     }
 
-    // if (!formDataState.operator_id) {
-    //   toast.error("Please select a valid Operator.");
-    //   setIsSubmitting(false);
-    //   return;
-    // }
+    if (!formDataState.operator_id) {
+      toast.error("Please select a valid Operator.");
+      setIsSubmitting(false);
+      return;
+    }
 
     const payload = {
       passenger_name: passengerName,
@@ -574,6 +572,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
             {/* Left Column */}
             <div className="space-y-4">
               {/* Operator Selection */}
+
               <OperatorSelector
                 operators={operators}
                 selectedOperatorId={formDataState.operator_id}
@@ -758,23 +757,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
 
               {/* Seat Details */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Seat Number(s) *
-                  </label>
-                  <div className="relative">
-                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                      required
-                      type="text"
-                      name="seat_numbers"
-                      value={formDataState.seat_numbers}
-                      onChange={handleInputChange}
-                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 uppercase font-bold"
-                      placeholder="A1, A2"
-                    />
-                  </div>
-                </div>
+
                 <div>
                   <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                     Total Seats *
@@ -793,6 +776,24 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                     />
                   </div>
                 </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                    Seat Number(s) *
+                  </label>
+                  <div className="relative">
+                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input
+                      required
+                      type="text"
+                      name="seat_numbers"
+                      value={formDataState.seat_numbers}
+                      onChange={handleInputChange}
+                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 uppercase font-bold"
+                      placeholder="A1, A2"
+                    />
+                  </div>
+                </div>
+
               </div>
 
               {/* Ticket Number */}

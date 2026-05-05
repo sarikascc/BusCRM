@@ -306,7 +306,7 @@ export default function TicketBookingList({
       return;
     }
 
-    if ( !settlementForm.receiverMobile) {
+    if (!settlementForm.receiverMobile) {
       toast.error("Please fill settlement  receiver details.");
       return;
     }
@@ -425,7 +425,7 @@ export default function TicketBookingList({
           <div className="bg-white rounded-2xl border border-[#3da9d4]/20 shadow-sm p-4 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
             {/* Background Accent */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#3da9d4]/5 rounded-full -mr-16 -mt-16" />
-            
+
             <div className="flex items-center gap-4 relative z-10">
               <div className="w-12 h-12 bg-[#3da9d4]/10 rounded-xl flex items-center justify-center text-[#3da9d4]">
                 <Briefcase size={24} />
@@ -446,7 +446,7 @@ export default function TicketBookingList({
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Sales</p>
                 <p className="text-base font-black text-slate-800">Rs. {totalAmount.toLocaleString()}</p>
               </div>
-              
+
               <div className="bg-slate-50/50 p-3 rounded-xl border border-slate-100">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Commission</p>
                 <p className="text-base font-black text-[#3da9d4]">{commissionPercentage}%</p>
@@ -501,15 +501,16 @@ export default function TicketBookingList({
                     title="Select visible unsettled tickets"
                   />
                 </th>
-                <th className="px-6 py-4 font-bold">Ticket Info</th>
-                <th className="px-6 py-4 font-bold">Passenger</th>
-                <th className="px-6 py-4 font-bold">Route & Pickup</th>
-                <th className="px-6 py-4 font-bold">Journey</th>
-                <th className="px-6 py-4 font-bold text-center">Seats</th>
-                {/* <th className="px-6 py-4 font-bold">Bus & Type</th> */}
-                <th className="px-6 py-4 font-bold">Operator & Payment</th>
-                <th className="px-6 py-4 font-bold">Payment Collection</th>
-                <th className="px-6 py-4 font-bold text-right">Actions</th>
+                <th className="px-6 py-4  text-[12px]">Ticket Info</th>
+                <th className="px-6 py-4  text-[12px]">Passenger</th>
+                <th className="px-6 py-4  text-[12px]">Route & Pickup</th>
+                <th className="px-6 py-4  text-[12px]">Journey</th>
+                <th className="px-6 py-4  text-[12px] text-center">Seats</th>
+                {/* <th className="px-6 py-4  text-[12px]">Bus & Type</th> */}
+                <th className="px-6 py-4  text-[11px]">Operator </th>
+                <th className="px-6 py-4  text-[11px]">Payment Type</th>
+                <th className="px-6 py-4  text-[11px]">Payment Collection</th>
+                <th className="px-6 py-4  text-[11px] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -596,16 +597,26 @@ export default function TicketBookingList({
                         <Briefcase className="w-3.5 h-3.5 text-[#3da9d4]" />
                         {ticket.operator?.operator_name || "N/A"}
                       </span>
-                      <div className="flex items-center gap-1.5 text-xs mt-0.5">
-                        <span className="font-black text-emerald-600">₹{ticket.amount || 0}</span>
-
-                        {/* <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
-                          {ticket.payment_type}
-                        </span> */}
-                      </div>
+                        <span className="text-[11px] text-slate-500 flex items-center gap-1.5">
+                        <Bus className="w-3.5 h-3.5  text-slate-400" />
+                        {ticket.bus_number || "N/A"}
+                      </span>
+                        <span className={`text-[10px] w-fit px-2 py-0.5 rounded font-black uppercase tracking-wider border shadow-sm ${ticket.travel_type === 'AC' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                        {ticket.travel_type}
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
+                    <div className="flex flex-col gap-1.5  mt-0.5">
+                      <span className="text-md text-emerald-600  font-bold">₹{ticket.amount || 0}</span>
+
+                      {/* <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
+                          {ticket.payment_type}
+                        </span> */}
+                    </div>
+                  </td>
+
+                  <td className="p  x-6 py-4">
                     {!ticket.operator_id ? (
                       <span className="text-[10px] bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-black border border-blue-200 uppercase tracking-widest shadow-sm flex items-center gap-1 w-fit">
                         <CheckCircle2 className="w-3 h-3" /> COLLECTED
@@ -631,13 +642,13 @@ export default function TicketBookingList({
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={(e) => handleEdit(ticket, e)}
-                        className="p-2 text-[#3da9d4] hover:text-[#2882a8] hover:bg-[#3da9d4]/5 rounded-xl transition-all border border-transparent hover:border-[#3da9d4]/10 shadow-sm"
+                        className="p-2 text-[#3da9d4] hover:text-[#2882a8] hover:bg-[#3da9d4]/5 rounded-[10px] transition-all border border-transparent hover:border-[#3da9d4]/10"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(ticket, e)}
-                        className="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all border border-transparent hover:border-rose-100 shadow-sm hover:shadow-md"
+                        className="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-[10px] transition-all border border-transparent hover:border-rose-100"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -758,9 +769,9 @@ export default function TicketBookingList({
               </div>
 
               <div className="space-y-4">
-               
+
                 <div className="pt-2  mt-2">
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
@@ -820,7 +831,7 @@ export default function TicketBookingList({
                 <div className="pt-4 border-t border-slate-100">
                   <div className="space-y-2">
                     <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                       Amount *
+                      Amount *
                     </label>
                     <div className="w-full h-10 px-4 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center">
                       <span className="text-sm font-black text-emerald-600">
