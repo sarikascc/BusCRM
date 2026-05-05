@@ -860,32 +860,14 @@ export default function TicketBookingList({
                 </div>
 
                 <div className="pt-4 border-t border-slate-100">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                        Paid Amount *
-                      </label>
-                      <div className="relative">
-                        <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input
-                          type="number"
-                          required
-                          value={settlementForm.paidAmount}
-                          onChange={(e) =>
-                            setSettlementForm((current) => ({ ...current, paidAmount: e.target.value }))
-                          }
-                          className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold bg-white"
-                          placeholder="0.00"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                        Pending Amount
-                      </label>
-                      <div className="h-10 px-4 flex items-center bg-slate-50 rounded-lg border border-slate-100 text-sm font-black text-rose-600">
-                        Rs. {(payableAmount - (parseFloat(settlementForm.paidAmount) || 0)).toLocaleString()}
-                      </div>
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                       Amount *
+                    </label>
+                    <div className="w-full h-10 px-4 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center">
+                      <span className="text-sm font-black text-emerald-600">
+                        Rs. {payableAmount.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </div>

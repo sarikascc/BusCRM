@@ -225,11 +225,11 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between mb-1 border-b border-slate-100 p-4">
+            <div className="flex items-center justify-between  mb-1  p-4">
               <div className="flex items-center gap-8">
                 <button
                   onClick={() => setActiveTab("bookings")}
-                  className={`text-sm font-black transition-all relative py-4 flex items-center gap-2 ${activeTab === "bookings" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
+                  className={`text-sm font-black transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "bookings" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
                     }`}
                 >
                   <Bus size={16} />
@@ -245,7 +245,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
                 <button
                   onClick={() => setActiveTab("history")}
-                  className={`text-sm font-black transition-all relative py-4 flex items-center gap-2 ${activeTab === "history" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
+                  className={`text-sm font-black transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "history" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
                     }`}
                 >
                   <Clock size={16} />
@@ -318,9 +318,9 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                             )}
                           </td>
                           <td className="px-4 py-4">
-                            <p className="text-[11px] font-black text-slate-800">{ticket.passenger_name}</p>
+                            <p className="text-[11px] font-bold text-slate-800 tracking-wider">{ticket.passenger_name}</p>
                             <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{ticket.mobile_number || "N/A"}</p>
-                            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{ticket.ticket_number || "NO-TKT"}</p>
+                            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider"> TKT NO : {ticket.ticket_number || "NO-TKT"}</p>
                           </td>
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 mb-1">
@@ -328,7 +328,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                               <ArrowRight size={10} className="text-slate-400" />
                               <span>{ticket.drop_city?.name}</span>
                             </div>
-                            <p className="text-[11px] font-black text-[#3da9d4] uppercase tracking-tighter">
+                            <p className="text-[11px] font-bold text-[#3da9d4] uppercase tracking-tighter">
                               {new Date(ticket.journey_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                             </p>
                           </td>
@@ -338,15 +338,15 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                                 <Briefcase size={12} />
                               </div>
                               <div>
-                                <p className="text-[11px] font-black text-slate-600">{ticket.account?.name || "Cash"}</p>
+                                <p className="text-[11px] font-bold text-slate-600">{ticket.account?.name || "Cash"}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-4">
-                            <p className="text-[11px] font-black text-slate-900 tracking-tighter">₹{Number(ticket.amount || 0).toLocaleString()}</p>
+                            <p className="text-[11px] font-bold text-slate-600  tracking-tighter">₹{Number(ticket.amount || 0).toLocaleString()}</p>
                           </td>
                           <td className="px-4 py-4">
-                            <span className={`text-[11px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter border ${ticket.settlement_id ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm' : 'bg-amber-50 text-amber-600 border-amber-100'
+                            <span className={`text-[11px] font-bold px-2 py-1 rounded-md tracking-wider border ${ticket.settlement_id ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm' : 'bg-amber-50 text-amber-600 border-amber-100'
                               }`}>
                               {ticket.settlement_id ? 'Settled' : 'Unsettled'}
                             </span>
@@ -368,102 +368,88 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                   <p className="text-xs text-slate-400 mt-1 text-center">Once you process payments, they will appear here</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {settlements.map((settlement) => (
-                    <div
-                      key={settlement.id}
-                      className="group bg-slate-50/50 hover:bg-white p-5 rounded-[1.5rem] border border-slate-100 hover:border-brand/20 transition-all hover:shadow-lg hover:shadow-brand/5 relative overflow-hidden"
-                    >
-                    
-
-
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-
-
-
-  {/* Receiver details */}
-                      <div className="pb-4 border-t border-slate-100/50 grid grid-cols-2 lg:grid-cols-2 gap-4 bg-slate-100 p-4 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                            <User size={12} className="text-slate-400" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Received By</p>
-                            <p className="text-[10px] font-bold text-slate-700">{settlement.received_by || "N/A"}</p>
-                          </div>
-                        </div>
-
-                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                            <Phone size={12} className="text-slate-400" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contact</p>
-                            <p className="text-[10px] font-bold text-slate-700">{settlement.receiver_mobile || "N/A"}</p>
-                          </div>
-                        </div>
-                       
-                        {settlement.reference_number && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center border border-slate-100">
-                              <Clock size={12} className="text-slate-400" />
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Reference</p>
-                              <p className="text-[11px] font-bold text-slate-700 truncate max-w-[120px]">{settlement.reference_number}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                        <div className="space-y-1 bg-slate-100 p-4 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-black text-brand uppercase tracking-tighter">
-                              #{settlement.id.slice(0, 8).toUpperCase()}
-                            </span>
-                            <span className="text-slate-200">|</span>
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                              <Calendar size={14} className="text-slate-400" />
-                              {new Date(settlement.created_at).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-4 mt-2">
-                            <div>
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Sales</p>
-                              <p className="text-sm font-bold text-slate-700">₹{settlement.total_amount.toLocaleString()}</p>
-                            </div>
-                            <div className="w-px h-6 bg-slate-200" />
-                            <div>
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Commission ({settlement.commission_percentage}%)</p>
-                              <p className="text-sm font-bold text-emerald-600">- ₹{settlement.commission_amount.toLocaleString()}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center p-4  bg-slate-100 p-4 rounded-lg gap-8">
-                           <div className="hidden lg:block">
-                            <div className="p-2.5 bg-white rounded-xl border border-slate-100 text-slate-400 group-hover:text-brand group-hover:border-brand/30 transition-all shadow-sm">
-                              <Receipt size={18} />
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Paid Out</p>
-                            <p className="text-xl font-black text-slate-900 tracking-tighter">₹{settlement.paid_amount.toLocaleString()}</p>
-                            <div className="flex items-center justify-end gap-1.5 mt-1">
-                              <span className="text-[9px] font-black bg-brand/5 text-brand px-2 py-0.5 rounded uppercase tracking-wider">{settlement.payment_method}</span>
-                              <span className="text-[9px] font-black bg-emerald-500 text-white px-2.5 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider shadow-sm">
-                                <CheckCircle2 size={10} /> SETTLED
+                <div className="overflow-x-auto rounded-[1.5rem] border border-slate-100 bg-white shadow-sm">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-100">
+                        <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/80">Settlement Info</th>
+                        <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/80">Receiver Details</th>
+                        <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/80 text-center">Sales & Commission</th>
+                        <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/80 text-right">Amount</th>
+                        <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/80 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {settlements.map((settlement) => (
+                        <tr key={settlement.id} className="hover:bg-slate-50/50 transition-colors group">
+                          
+                          {/* Info Column */}
+                          <td className="py-4 px-6">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-black text-[#3da9d4] uppercase tracking-tighter">
+                                #{settlement.id.slice(0, 8).toUpperCase()}
                               </span>
                             </div>
-                          </div>
+                            <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                              <Calendar size={12} className="text-slate-400" />
+                              {new Date(settlement.created_at).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </div>
+                          </td>
 
-                         
-                        </div>
-                      </div>
+                          {/* Receiver Column */}
+                          <td className="py-4 px-6">
+                            <div className="space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <User size={12} className="text-slate-400" />
+                                <span className="text-xs font-black text-slate-700">{settlement.received_by || "N/A"}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Phone size={12} className="text-slate-400" />
+                                <span className="text-[11px] font-bold text-slate-500">{settlement.receiver_mobile || "N/A"}</span>
+                              </div>
+                            </div>
+                          </td>
 
+                          {/* Sales Column */}
+                          <td className="py-4 px-6">
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between gap-4">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase">Total Sales</span>
+                                <span className="text-xs font-black text-slate-800">₹{settlement.total_amount.toLocaleString()}</span>
+                              </div>
+                              <div className="flex items-center justify-between gap-4">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase">Comm ({settlement.commission_percentage}%)</span>
+                                <span className="text-xs font-black text-rose-500">-₹{settlement.commission_amount.toLocaleString()}</span>
+                              </div>
+                            </div>
+                          </td>
 
-                    </div>
-                  ))}
+                          {/* Paid Amount Column */}
+                          <td className="py-4 px-6 text-right">
+                            <div className="text-base font-black text-emerald-600 tracking-tight">
+                              ₹{settlement.paid_amount.toLocaleString()}
+                            </div>
+                            <span className="inline-block mt-1 text-[9px] font-black bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-wider">
+                              {settlement.payment_method}
+                            </span>
+                          </td>
+
+                          {/* Status Column */}
+                          <td className="py-4 px-6 text-right">
+                            <div className="flex flex-col items-end gap-2">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-black bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                                <CheckCircle2 size={10} /> SETTLED
+                              </span>
+                              {/* <button className="text-[10px] font-bold text-[#3da9d4]  flex items-center gap-1 transition-colors ">
+                                <Receipt size={12} /> View Receipt
+                              </button> */}
+                            </div>
+                          </td>
+
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )
             )}
@@ -651,23 +637,13 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                     </div>
 
                     {/* Payment Amounts */}
-                    <div className="grid grid-cols-2 gap-6 pt-2">
+                    <div className="pt-2">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">PAID AMOUNT *</label>
-                        <div className="relative">
-                          <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                          <input
-                            type="number"
-                            value={settlementForm.paidAmount}
-                            onChange={(e) => setSettlementForm(prev => ({ ...prev, paidAmount: e.target.value }))}
-                            className="w-full h-12 pl-11 pr-4 bg-white border border-slate-200 rounded-2xl text-sm font-black focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all shadow-sm"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">PENDING AMOUNT</label>
-                        <div className="w-full h-12 px-4 bg-rose-50 rounded-2xl border border-rose-100 flex items-center">
-                          <span className="text-sm font-black text-rose-600">₹{(Math.max(0, (unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) - ((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100)) - (parseFloat(settlementForm.paidAmount) || 0))).toLocaleString()}</span>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">AMOUNT *</label>
+                        <div className="w-full h-12 px-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center">
+                          <span className="text-sm font-black text-emerald-600">
+                            ₹{(unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) - ((unsettledTickets.filter(t => selectedTicketIds.includes(t.id)).reduce((sum, t) => sum + (Number(t.amount) || 0), 0) * (Number(operator.commission_percentage) || 0)) / 100)).toLocaleString()}
+                          </span>
                         </div>
                       </div>
                     </div>

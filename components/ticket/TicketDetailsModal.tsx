@@ -180,7 +180,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
             <div className="absolute inset-x-0 top-0 h-1 bg-brand" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-x sm:divide-y-0 divide-slate-100">
-              <div className="p-6 space-y-4">
+              <div className="p-3 space-y-4">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                   Reserved Seats
                 </p>
