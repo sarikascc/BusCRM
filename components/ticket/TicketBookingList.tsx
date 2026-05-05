@@ -506,7 +506,7 @@ export default function TicketBookingList({
                 <th className="px-6 py-4 font-bold">Route & Pickup</th>
                 <th className="px-6 py-4 font-bold">Journey</th>
                 <th className="px-6 py-4 font-bold text-center">Seats</th>
-                <th className="px-6 py-4 font-bold">Bus & Type</th>
+                {/* <th className="px-6 py-4 font-bold">Bus & Type</th> */}
                 <th className="px-6 py-4 font-bold">Operator & Payment</th>
                 <th className="px-6 py-4 font-bold">Payment Collection</th>
                 <th className="px-6 py-4 font-bold text-right">Actions</th>
@@ -577,7 +577,7 @@ export default function TicketBookingList({
                       </span> */}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  {/* <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-slate-700 flex items-center gap-1.5">
                         <Bus className="w-3.5 h-3.5 text-slate-400" />
@@ -587,7 +587,7 @@ export default function TicketBookingList({
                         {ticket.travel_type}
                       </span>
                     </div>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-slate-700 flex items-center gap-1.5">

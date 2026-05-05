@@ -188,7 +188,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
                     }`}>
                       {entry.type === "Income" ? "+" : "-"} {formatCurrency(entry.amount)}
                     </td>,
-                    <td key="remarks" className="px-6 py-4 text-sm text-slate-500 truncate max-w-[200px]">{entry.remarks || "-"}</td>,
+                    <td key="remarks" className="px-6 py-4 text-sm text-slate-500 truncate max-w-[200px]">{(entry.remarks || "-").replace(/\s*\[TID:[^\]]+\]/g, "").replace(/(Operator Settlement):\s*[a-fA-F0-9\-]+/g, "$1")}</td>,
                     <td key="actions" className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2 transition-opacity">
                         <button onClick={() => setEntryToDelete(entry)} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
