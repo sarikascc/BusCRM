@@ -596,10 +596,10 @@ export default function TicketBookingList({
                       </span>
                       <div className="flex items-center gap-1.5 text-xs mt-0.5">
                         <span className="font-black text-emerald-600">₹{ticket.amount || 0}</span>
-                        <span className="text-slate-200">|</span>
-                        <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
+
+                        {/* <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
                           {ticket.payment_type}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </td>
