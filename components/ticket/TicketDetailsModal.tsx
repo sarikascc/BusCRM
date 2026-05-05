@@ -64,7 +64,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
         </div>
 
         {/* Content Area */}
-        <div className="p-6 space-y-8 overflow-y-auto custom-scrollbar max-h-[60vh] bg-slate-50/30">
+        <div className="p-4 space-y-8 overflow-y-auto custom-scrollbar  bg-slate-50/30">
 
           {/* Main Journey Card */}
           <div className="relative">
@@ -206,11 +206,10 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                 </div>
                 <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                   <span
-                    className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${
-                      booking.settlement_id
+                    className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${booking.settlement_id
                         ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
                         : "bg-amber-50 text-amber-600 border border-amber-100"
-                    }`}
+                      }`}
                   >
                     {booking.settlement_id ? <CheckCircle2 size={12} /> : null}
                     {booking.settlement_id ? "Paid" : "Pending"}
