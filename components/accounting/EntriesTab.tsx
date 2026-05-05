@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useMemo, useState, useEffect } from "react";
-import { Plus, Search, Filter, Download, RotateCcw, Trash2, Edit2 } from "lucide-react";
+import { Plus, Search, Download, RotateCcw, Trash2, Edit2 } from "lucide-react";
 import { Entry, Account, Category, deleteEntry, getEntries } from "@/lib/actions/accounting.actions";
 import AddEntryModal from "./AddEntryModal";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -66,10 +66,14 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
     setEntries(initialEntries);
   };
 
-  const applyFilters = async () => {
-    const filteredEntries = await getEntries(filters);
-    setEntries(filteredEntries);
-  };
+  // Auto-apply filters when any filter value changes
+  useEffect(() => {
+    const timeout = setTimeout(async () => {
+      const filteredEntries = await getEntries(filters);
+      setEntries(filteredEntries);
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [filters]);
 
   const handleDelete = async () => {
     if (!entryToDelete) return;
@@ -142,9 +146,6 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
             {accounts.map((acc) => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
           </select>
 
-          <button onClick={applyFilters} className="p-2 bg-[#3da9d4] text-white rounded-lg hover:bg-[#2882a8] transition-all">
-            <Filter size={18} />
-          </button>
           <button onClick={resetFilters} className="p-2 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 transition-all">
             <RotateCcw size={18} />
           </button>
