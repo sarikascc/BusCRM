@@ -92,11 +92,11 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
     setIsSettlementFormOpen(true);
   };
 
-  const handleProcessSettlementSubmit = async () => {
-    if (!settlementForm.receiverMobile) {
-      toast.error("Please fill  receiver details");
-      return;
-    }
+     const handleProcessSettlementSubmit = async () => {
+     if (!settlementForm.receiverMobile) {
+       toast.error("Please fill receiver details");
+       return;
+     }
 
     setIsSettling(true);
     try {
