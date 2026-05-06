@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { createTicketBooking, updateTicketBooking } from "@/lib/actions/ticket.actions";
+import { addManualCustomer } from "@/lib/actions/lead.actions";
 import {
   Loader2,
   MapPin,
@@ -527,6 +528,17 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
     };
 
     try {
+      // Check if customer exists and add if not (Auto-sync logic)
+      const { data: existingCustomer } = await supabase
+        .from("customers")
+        .select("id")
+        .eq("mobile_number", payload.mobile_number)
+        .maybeSingle();
+
+      if (!existingCustomer) {
+        await addManualCustomer(payload.passenger_name, payload.mobile_number);
+      }
+
       if (booking) {
         await updateTicketBooking(booking.id, payload);
         toast.success("Booking updated successfully!");
