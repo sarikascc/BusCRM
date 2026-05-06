@@ -634,7 +634,7 @@ export default function TicketBookingList({
                       </div>
                     ) : (
                       <span className="text-[10px] bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-black border border-slate-200 uppercase tracking-widest shadow-sm flex items-center gap-1 w-fit">
-                        <Clock size={10} className="text-slate-400" /> PENDING
+                        <Clock size={10} className="text-slate-400" /> UNSETTLED
                       </span>
                     )}
                   </td>

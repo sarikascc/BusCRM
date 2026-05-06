@@ -96,14 +96,14 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <ShieldCheck size={12} className="text-[#3da9d4]" /> Operator Name *
             </label>
             <input
               required
               type="text"
               placeholder="e.g. Mahasagar Travels"
-              className="input-primary h-11 rounded-xl font-bold text-sm"
+              className="input-primary h-11 rounded-[10px] font-bold text-sm"
               value={formData.operator_name}
               onChange={(e) => setFormData({ ...formData, operator_name: e.target.value })}
             />
@@ -111,21 +111,21 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
 
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
                 <User size={12} className="text-slate-400" /> Contact Person *
               </label>
               <input
                 required
                 type="text"
                 placeholder="Full Name"
-                className="input-primary h-11 rounded-xl font-bold text-sm"
+                className="input-primary h-11 rounded-[10px] font-bold text-sm"
                 value={formData.person_name}
                 onChange={(e) => setFormData({ ...formData, person_name: e.target.value })}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
                 <Phone size={12} className="text-slate-400" /> Mobile Number *
               </label>
               <div className="relative">
@@ -134,7 +134,7 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
                   required
                   type="tel"
                   placeholder="1234567890"
-                  className="input-primary pl-12 h-11 rounded-xl font-bold text-sm tracking-wider"
+                  className="input-primary pl-12 h-11 rounded-[10px] font-bold text-sm tracking-wider"
                   value={formData.mobile_number}
                   maxLength={10}
                   onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
@@ -145,29 +145,29 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
                 <Percent size={12} className="text-emerald-500" /> Commission
               </label>
               <input
                 type="number"
                 step="0.01"
-                className="input-primary h-11 rounded-xl font-black text-sm text-emerald-600"
+                className="input-primary h-11 rounded-[10px] font-black text-sm text-emerald-600"
                 value={formData.commission_percentage}
                 onChange={(e) => setFormData({ ...formData, commission_percentage: e.target.value })}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                 Status
               </label>
-              <div className="flex p-1 bg-slate-50 border border-slate-200 rounded-xl h-11">
+              <div className="flex p-1 bg-slate-50 border border-slate-200 rounded-[10px] h-11">
                 {["Active", "Inactive"].map((status) => (
                   <button
                     key={status}
                     type="button"
                     onClick={() => setFormData({ ...formData, status: status as any })}
-                    className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                    className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-[10px] transition-all ${
                       formData.status === status
                         ? "bg-white text-[#3da9d4] shadow-sm border border-slate-100"
                         : "text-slate-400 hover:text-slate-600"

@@ -215,7 +215,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                     }`}
                   >
                     {(!booking.operator_id || booking.settlement_id) ? <CheckCircle2 size={12} /> : null}
-                    {!booking.operator_id ? "Collected" : booking.settlement_id ? "Paid" : "Pending"}
+                    {!booking.operator_id ? "Collected" : booking.settlement_id ? "Settled" : "Unsettled"}
                   </span>
                   <span className="text-[10px] font-black bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest border border-slate-200">
                     {booking.payment_type || "N/A"}
