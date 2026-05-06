@@ -93,9 +93,9 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-slate-50/30">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-slate-50/30">
         <SummaryCard label="Total Income" value={summary.income} color="text-emerald-600" bgColor="bg-emerald-50" mounted={mounted} />
-        {/* <SummaryCard label="Total Expense" value={summary.expense} color="text-rose-600" bgColor="bg-rose-50" mounted={mounted} /> */}
+        <SummaryCard label="Total Expense" value={summary.expense} color="text-rose-600" bgColor="bg-rose-50" mounted={mounted} />
         <SummaryCard label="Net Amount" value={summary.net} color={summary.net >= 0 ? "text-[#3da9d4]" : "text-rose-600"} bgColor="bg-slate-50" mounted={mounted} />
         <SummaryCard label="Transactions" value={summary.count} color="text-slate-600" bgColor="bg-slate-100" isCurrency={false} mounted={mounted} />
       </div>
