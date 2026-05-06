@@ -183,7 +183,7 @@ export default function OperatorList({ initialOperators, accounts = [] }: Props)
                   </td>
                   <td className="px-6 py-4 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-2  transition-all duration-200">
-                      <button
+                      {/* <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleViewDetails(operator);
@@ -192,7 +192,7 @@ export default function OperatorList({ initialOperators, accounts = [] }: Props)
                         title="Settle Payments"
                       >
                         <Wallet size={16} />
-                      </button>
+                      </button> */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
