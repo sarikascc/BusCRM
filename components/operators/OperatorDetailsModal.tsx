@@ -229,7 +229,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
               <div className="flex items-center gap-8">
                 <button
                   onClick={() => setActiveTab("bookings")}
-                  className={`text-sm font-black transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "bookings" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
+                  className={`text-xs font-bold transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "bookings" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
                     }`}
                 >
                   <Bus size={16} />
@@ -245,7 +245,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
                 <button
                   onClick={() => setActiveTab("history")}
-                  className={`text-sm font-black transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "history" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
+                  className={`text-xs font-bold transition-all uppercase tracking-wider  relative py-4 flex items-center gap-2 ${activeTab === "history" ? "text-[#3da9d4]" : "text-slate-400 hover:text-slate-600"
                     }`}
                 >
                   <Clock size={16} />
@@ -474,7 +474,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
         </div>
 
         {/* Footer */}
-        <div className="p-8 pt-4 flex items-center justify-between bg-slate-50/50 border-t border-slate-100">
+        <div className="p-8 pt-4 flex items-center justify-end bg-slate-50/50 border-t border-slate-100">
 
           <button
             onClick={onClose}
