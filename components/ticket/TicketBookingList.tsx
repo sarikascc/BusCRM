@@ -491,9 +491,9 @@ export default function TicketBookingList({
                   <input
                     type="checkbox"
                     checked={
-                      currentTickets.some((ticket) => !ticket.settlement_id && ticket.operator_id) &&
+                      currentTickets.some((ticket) => !ticket.settlement_id ) &&
                       currentTickets
-                        .filter((ticket) => !ticket.settlement_id && ticket.operator_id)
+                        .filter((ticket) => !ticket.settlement_id)
                         .every((ticket) => selectedTicketIds.includes(ticket.id))
                     }
                     onChange={handleSelectCurrentPage}
@@ -597,11 +597,11 @@ export default function TicketBookingList({
                         <Briefcase className="w-3.5 h-3.5 text-[#3da9d4]" />
                         {ticket.operator?.operator_name || "N/A"}
                       </span>
-                        <span className="text-[11px] text-slate-500 flex items-center gap-1.5">
+                      <span className="text-[11px] text-slate-500 flex items-center gap-1.5">
                         <Bus className="w-3.5 h-3.5  text-slate-400" />
                         {ticket.bus_number || "N/A"}
                       </span>
-                        <span className={`text-[10px] w-fit px-2 py-0.5 rounded font-black uppercase tracking-wider border shadow-sm ${ticket.travel_type === 'AC' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                      <span className={`text-[10px] w-fit px-2 py-0.5 rounded font-black uppercase tracking-wider border shadow-sm ${ticket.travel_type === 'AC' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                         {ticket.travel_type}
                       </span>
                     </div>
@@ -617,11 +617,7 @@ export default function TicketBookingList({
                   </td>
 
                   <td className="p  x-6 py-4">
-                    {!ticket.operator_id ? (
-                      <span className="text-[10px] bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-black border border-blue-200 uppercase tracking-widest shadow-sm flex items-center gap-1 w-fit">
-                        <CheckCircle2 className="w-3 h-3" /> COLLECTED
-                      </span>
-                    ) : ticket.settlement_id ? (
+                    {ticket.settlement_id ? (
                       <div className="flex flex-col">
                         <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">
                           <CheckCircle2 className="w-3 h-3" /> SETTLED
