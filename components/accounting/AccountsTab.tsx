@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useState, useEffect } from "react";
-import { Plus, Search, Download, Trash2, Edit2, Eye } from "lucide-react";
+import { Plus, Search, Download, Trash2, Edit2, Eye, ReceiptText } from "lucide-react";
 import { Account, deleteAccount, getAccounts } from "@/lib/actions/accounting.actions";
 import AddAccountModal from "./AddAccountModal";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -18,6 +18,7 @@ const getErrorMessage = (error: unknown) =>
 export default function AccountsTab({ initialAccounts }: Props) {
   const [accounts, setAccounts] = useState(initialAccounts);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -34,11 +35,19 @@ export default function AccountsTab({ initialAccounts }: Props) {
 
   const handleEdit = (account: Account) => {
     setSelectedAccount(account);
+    setViewMode(false);
+    setIsModalOpen(true);
+  };
+
+  const handleViewLedger = (account: Account) => {
+    setSelectedAccount(account);
+    setViewMode(true);
     setIsModalOpen(true);
   };
 
   const handleAddNew = () => {
     setSelectedAccount(null);
+    setViewMode(false);
     setIsModalOpen(true);
   };
 
@@ -89,12 +98,11 @@ export default function AccountsTab({ initialAccounts }: Props) {
         <table className="w-full border-collapse">
           <thead className="sticky top-0 bg-white z-10">
             <tr className="border-b border-slate-100"><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Account Name</th>
-            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Opening Balance</th>
-            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total In</th>
-            {/* <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total Out</th> */}
-            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Current Balance</th>
-            <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Opening Balance</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total In</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Current Balance</th>
+              <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {filteredAccounts.length === 0 ? (
@@ -105,10 +113,15 @@ export default function AccountsTab({ initialAccounts }: Props) {
                   "tr",
                   {
                     key: acc.id,
-                    className: "hover:bg-slate-50/50 transition-colors group",
+                    className: "hover:bg-slate-50/50 transition-colors group cursor-pointer",
+                    onClick: () => handleViewLedger(acc),
                   },
                   [
-                    <td key="name" className="px-6 py-4 text-sm text-slate-800 font-bold">{acc.name}</td>,
+                    <td key="name" className="px-6 py-4 text-sm text-slate-800 font-bold">
+                      <div className="group-hover:text-[#3da9d4] transition-colors text-left flex items-center gap-2">
+                        <ReceiptText size={14} className="text-slate-400" /> {acc.name}
+                      </div>
+                    </td>,
                     <td key="opening" className="px-6 py-4 text-sm text-right text-slate-600">{mounted ? formatCurrency(acc.opening_balance) : `₹${acc.opening_balance}`}</td>,
                     <td key="in" className="px-6 py-4 text-sm text-right text-emerald-600 font-bold">{mounted ? formatCurrency(acc.total_in) : `₹${acc.total_in}`}</td>,
                     // <td key="out" className="px-6 py-4 text-sm text-right text-rose-600 font-bold">{mounted ? formatCurrency(acc.total_out) : `₹${acc.total_out}`}</td>,
@@ -121,8 +134,8 @@ export default function AccountsTab({ initialAccounts }: Props) {
                     </td>,
                     <td key="actions" className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2 opacity-100">
-                        <button onClick={() => handleEdit(acc)} className="p-1.5 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
-                        <button onClick={() => setAccountToDelete(acc)} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); handleEdit(acc); }} className="p-1.5 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); setAccountToDelete(acc); }} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
                       </div>
                     </td>,
                   ]
@@ -137,6 +150,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
         <AddAccountModal
           isOpen={isModalOpen}
           account={selectedAccount}
+          isViewOnly={viewMode}
           onClose={() => setIsModalOpen(false)}
           onSuccess={async () => {
             const updated = await getAccounts();

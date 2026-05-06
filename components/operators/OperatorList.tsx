@@ -174,8 +174,8 @@ export default function OperatorList({ initialOperators, accounts = [] }: Props)
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`text-[10px] px-2.5 py-1 rounded-md font-black uppercase tracking-widest border shadow-sm inline-block ${operator.status === "Active"
-                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                          : "bg-slate-100 text-slate-500 border-slate-200"
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        : "bg-slate-100 text-slate-500 border-slate-200"
                         }`}
                     >
                       {operator.status}

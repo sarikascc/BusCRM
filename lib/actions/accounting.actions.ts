@@ -187,7 +187,7 @@ export async function getEntries(filters?: {
       account:accounts(name),
       category:categories(name)
     `)
-    .order("date", { ascending: false });
+    .order("created_at", { ascending: false });
 
   if (filters?.startDate) query = query.gte("date", filters.startDate);
   if (filters?.endDate) query = query.lte("date", filters.endDate);

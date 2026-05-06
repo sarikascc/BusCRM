@@ -79,7 +79,7 @@ export async function createTicketBooking(data: CreateTicketPayload) {
             amount: data.amount,
             type: "Income",
             date: data.booking_date || new Date().toISOString().split("T")[0],
-            remarks: `Ticket Booking: ${data.passenger_name} [TID:${newTicket.id}]`,
+            remarks: `Ticket Booking: ${data.passenger_name}${data.ticket_number ? ` (No: ${data.ticket_number})` : ""} [TID:${newTicket.id}]`,
           },
         ]);
       }
@@ -176,7 +176,7 @@ export async function updateTicketBooking(id: string, data: Partial<CreateTicket
               account_id: ticket.account_id,
               amount: ticket.amount,
               date: ticket.booking_date || ticket.created_at.split("T")[0],
-              remarks: `Ticket Booking: ${ticket.passenger_name} [TID:${id}]`,
+              remarks: `Ticket Booking: ${ticket.passenger_name}${ticket.ticket_number ? ` (No: ${ticket.ticket_number})` : ""} [TID:${id}]`,
             })
             .eq("id", existingEntry.id);
         } else {
@@ -188,7 +188,7 @@ export async function updateTicketBooking(id: string, data: Partial<CreateTicket
               amount: ticket.amount,
               type: "Income",
               date: ticket.booking_date || ticket.created_at.split("T")[0],
-              remarks: `Ticket Booking: ${ticket.passenger_name} [TID:${id}]`,
+              remarks: `Ticket Booking: ${ticket.passenger_name}${ticket.ticket_number ? ` (No: ${ticket.ticket_number})` : ""} [TID:${id}]`,
             },
           ]);
         }

@@ -143,7 +143,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
 
           <select name="accountId" value={filters.accountId} onChange={handleFilterChange} className="input-primary py-2 w-40">
             <option value="">All Accounts</option>
-            {accounts.map((acc) => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+            {accounts.map((acc) => <option key={acc.id} value={acc.id}>{acc.name} </option>)}
           </select>
 
           <button onClick={resetFilters} className="p-2 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 transition-all">
@@ -158,7 +158,14 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
       <div className="flex-1 overflow-auto custom-scrollbar">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 bg-white z-10">
-            <tr className="border-b border-slate-100"><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Type</th><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Account</th><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Category</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th><th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Remarks</th><th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
+            <tr className="border-b border-slate-100">
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Type</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Account</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Remarks</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th></tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {entries.length === 0 ? (
@@ -176,17 +183,15 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
                       {mounted ? new Date(entry.date).toLocaleDateString() : entry.date}
                     </td>,
                     <td key="type" className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                        entry.type === "Income" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                      }`}>
+                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${entry.type === "Income" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                        }`}>
                         {entry.type}
                       </span>
                     </td>,
                     <td key="account" className="px-6 py-4 text-sm text-slate-800 font-bold">{entry.account?.name}</td>,
                     <td key="category" className="px-6 py-4 text-sm text-slate-600">{entry.category?.name}</td>,
-                    <td key="amount" className={`px-6 py-4 text-sm text-right font-black ${
-                      entry.type === "Income" ? "text-emerald-600" : "text-rose-600"
-                    }`}>
+                    <td key="amount" className={`px-6 py-4 text-sm text-right font-black ${entry.type === "Income" ? "text-emerald-600" : "text-rose-600"
+                      }`}>
                       {entry.type === "Income" ? "+" : "-"} {formatCurrency(entry.amount)}
                     </td>,
                     <td key="remarks" className="px-6 py-4 text-sm text-slate-500 truncate max-w-[200px]">{(entry.remarks || "-").replace(/\s*\[TID:[^\]]+\]/g, "").replace(/(Operator Settlement):\s*[a-fA-F0-9\-]+/g, "$1")}</td>,

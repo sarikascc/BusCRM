@@ -508,7 +508,7 @@ export default function TicketBookingList({
                 <th className="px-6 py-4  text-[12px] text-center">Seats</th>
                 {/* <th className="px-6 py-4  text-[12px]">Bus & Type</th> */}
                 <th className="px-6 py-4  text-[11px]">Operator </th>
-                <th className="px-6 py-4  text-[11px]">Payment Type</th>
+                <th className="px-6 py-4  text-[11px]">Amount</th>
                 <th className="px-6 py-4  text-[11px]">Payment Collection</th>
                 <th className="px-6 py-4  text-[11px] text-right">Actions</th>
               </tr>
@@ -616,7 +616,7 @@ export default function TicketBookingList({
                     </div>
                   </td>
 
-                  <td className="p  x-6 py-4">
+                  <td className="px-6 py-4">
                     {ticket.settlement_id ? (
                       <div className="flex flex-col">
                         <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">

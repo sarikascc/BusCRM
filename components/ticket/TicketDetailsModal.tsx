@@ -26,13 +26,20 @@ interface Props {
   booking: any;
 }
 
+
+
 export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) {
   if (!isOpen || !booking) return null;
 
+  const totalSales = Number(booking.amount || 0);
+  const commissionPercent = Number(booking.operator?.commission || 10); // default 10%
+  const commissionAmount = (totalSales * commissionPercent) / 100;
+  const payable = totalSales - commissionAmount;
+
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-md transition-all duration-500">
-      <div className="bg-white rounded-[20px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col relative border border-white/20">
+    <div className="fixed inset-0 z-[120] flex items-center h-screen justify-center bg-slate-900/60 p-4 backdrop-blur-md transition-all duration-500">
+      <div style={{ maxHeight: "85vh", overflowY: "auto" }} className="bg-white  rounded-[20px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] w-full max-w-[900px]  flex flex-col relative border border-white/20">
 
         {/* Header with Gradient Background */}
         <div className="bg-gradient-to-br from-slate-100 to-slate-200 p-8 text-black relative overflow-hidden">
@@ -64,18 +71,15 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
         </div>
 
         {/* Content Area */}
-        <div className="p-4 space-y-8 overflow-y-auto custom-scrollbar  bg-slate-50/30">
+        <div className="p-4 space-y-5 overflow-y-auto custom-scrollbar  bg-slate-50/30">
 
           {/* Main Journey Card */}
           <div className="relative">
             <div className="bg-white rounded-[12px] p-4 shadow-sm border border-slate-100 flex items-center justify-between gap-4">
               <div className="flex-1 space-y-2">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Origin</p>
-                <h4 className="text-lg font-bold text-slate-800">{booking.pickup_city?.name}</h4>
-                <div className="flex items-center gap-1.5 text-slate-500">
-                  <MapPin size={14} className="text-[#3da9d4]" />
-                  <span className="text-xs font-bold truncate max-w-[140px]">{booking.pickup_area}</span>
-                </div>
+                <h4 className="text-lg font-bold text-slate-800">{booking.pickup_city?.name} </h4>
+                <MapPin size={14} className="text-[#3da9d4]" />
               </div>
 
               <div className="flex flex-col items-center justify-center px-4">
@@ -102,7 +106,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
             {/* Passenger & Contact */}
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-brand rounded-full" /> Passenger Details
                 </label>
                 <div className="bg-white p-4 rounded-[12px] border border-slate-100 shadow-sm">
@@ -111,14 +115,14 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                       <User size={18} className="text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-black text-slate-800 leading-tight">{booking.passenger_name}</p>
+                      <p className="text-sm font-bold text-slate-800 leading-tight">{booking.passenger_name}</p>
                       <p className="text-xs font-bold text-slate-500 mt-0.5">{booking.mobile_number}</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Journey Schedule
                 </label>
                 <div className="bg-white p-4 rounded-[12px] border border-slate-100 shadow-sm space-y-3">
@@ -130,7 +134,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock size={16} className="text-brand" />
-                    <span className="text-sm font-black text-brand tracking-tight">
+                    <span className="text-sm font-bold text-brand tracking-tight">
                       {booking.pickup_time.slice(0, 5)} Departure
                     </span>
                   </div>
@@ -143,7 +147,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
             <div className="space-y-6">
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-brand rounded-full" /> Bus Information
                 </label>
                 <div className="bg-white p-4 rounded-[12px] border border-slate-100 shadow-sm flex items-center justify-between">
@@ -152,22 +156,22 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                       <Bus size={18} className="text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-black text-slate-800 leading-tight uppercase">{booking.bus_number || "N/A"}</p>
-                      <p className="text-[10px] font-black text-brand tracking-widest uppercase mt-0.5">{booking.travel_type}</p>
+                      <p className="text-sm font-bold text-slate-800 leading-tight uppercase">{booking.bus_number || "N/A"}</p>
+                      <p className="text-[10px] font-bold text-brand tracking-widest uppercase mt-0.5">{booking.travel_type}</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-brand rounded-full" /> Assignment
                 </label>
                 <div className="bg-white p-4 rounded-[12px] border border-slate-100 shadow-sm">
                   <div className="flex items-center gap-3">
                     <Briefcase size={18} className="text-slate-400" />
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Operator</p>
-                      <p className="text-xs font-black text-slate-800">{booking.operator?.operator_name || "N/A"}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Operator</p>
+                      <p className="text-xs font-bold text-slate-800">{booking.operator?.operator_name || "N/A"}</p>
                     </div>
                   </div>
                 </div>
@@ -178,56 +182,102 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
           {/* Ticket Footer / Summary */}
           <div className="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-sm">
             <div className="absolute inset-x-0 top-0 h-1 bg-brand" />
+            <div className="grid grid-cols-2 gap-6">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-x sm:divide-y-0 divide-slate-100">
-              <div className="p-3 space-y-4">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  Reserved Seats
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-2xl bg-brand/10 text-brand flex items-center justify-center">
-                    <Hash size={16} />
+              {/* Operator Settlement Card */}
+              <div className=" rounded-[16px] p-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                      Total Sales
+                    </p>
+                    <p className="text-lg font-black text-slate-800">
+                      Rs. {totalSales}
+                    </p>
                   </div>
-                  <span className="text-xl font-black text-slate-800 tracking-tight">
-                    {booking.seat_numbers || "N/A"}
-                  </span>
+
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-400  uppercase tracking-widest">
+                      Commission
+                    </p>
+                    <p className="text-lg font-black text-sky-500">
+                      {commissionPercent}%
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                      Comm. Amount
+                    </p>
+                    <p className="text-lg font-black text-emerald-600">
+                      Rs. {commissionAmount}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                      Payable
+                    </p>
+                    <p className="text-lg font-black text-red-500">
+                      Rs. {payable}
+                    </p>
+                  </div>
                 </div>
-                <span className="inline-flex text-[10px] font-black bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest">
-                  {booking.total_seats || 0} {booking.total_seats > 1 ? "Passengers" : "Passenger"}
-                </span>
               </div>
 
-              <div className="p-6 space-y-4 sm:text-right">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  Total Fare
-                </p>
-                <div className="text-xl font-black text-slate-800 tracking-tight">
-                  Rs. {Number(booking.amount || 0).toLocaleString()}
+              <div className="grid grid-cols-2 divide-slate-100">
+                <div className="p-5 space-y-4">
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                    Reserved Seats
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-[10px] bg-brand/10 text-brand flex items-center justify-center">
+                      <Hash size={16} />
+                    </div>
+                    <span className="text-xl font-black text-slate-800 tracking-tight">
+                      {booking.seat_numbers || "N/A"}
+                    </span>
+                  </div>
+                  <span className="inline-flex text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                    {booking.total_seats || 0} {booking.total_seats > 1 ? "Passengers" : "Passenger"}
+                  </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                  <span
-                    className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${
-                      !booking.operator_id
+
+                <div className="p-5 space-y-4 sm:text-right">
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                    Total Fare
+                  </p>
+                  <div className="text-xl font-black text-slate-800 tracking-tight">
+                    Rs. {Number(booking.amount || 0).toLocaleString()}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+                    <span
+                      className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${!booking.operator_id
                         ? "bg-blue-50 text-blue-600 border border-blue-100"
                         : booking.settlement_id
-                        ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                        : "bg-amber-50 text-amber-600 border border-amber-100"
-                    }`}
-                  >
-                    {(!booking.operator_id || booking.settlement_id) ? <CheckCircle2 size={12} /> : null}
-                    {!booking.operator_id ? "Collected" : booking.settlement_id ? "Settled" : "Unsettled"}
-                  </span>
-                  <span className="text-[10px] font-black bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest border border-slate-200">
-                    {booking.payment_type || "N/A"}
-                  </span>
+                          ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                          : "bg-amber-50 text-amber-600 border border-amber-100"
+                        }`}
+                    >
+                      {(!booking.operator_id || booking.settlement_id) ? <CheckCircle2 size={12} /> : null}
+                      {!booking.operator_id ? "Collected" : booking.settlement_id ? "Settled" : "Unsettled"}
+                    </span>
+                    <span className="text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest border border-slate-200">
+                      {booking.payment_type || "N/A"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
+
+
           </div>
+
+
         </div>
 
         {/* Action Bar */}
-        <div className="p-8 pt-4 flex gap-3 bg-white border-t border-slate-100">
+        <div className="p-4 pt-4 flex gap-3 bg-white border-t border-slate-100">
 
 
           <button
