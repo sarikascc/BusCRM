@@ -86,7 +86,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account }:
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1">Account Name *</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Account Name *</label>
             <input 
               required
               type="text"
@@ -98,7 +98,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account }:
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1">Opening Balance</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Opening Balance</label>
             <input 
               type="number"
               step="0.01"
@@ -111,7 +111,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account }:
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1">Status</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Status</label>
             <div className="flex gap-2">
               {["Active", "Inactive"].map((status) => (
                 <button

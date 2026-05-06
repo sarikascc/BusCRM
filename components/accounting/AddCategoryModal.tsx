@@ -81,7 +81,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <Tag size={12} className="text-[#3da9d4]" /> Category Name *
             </label>
             <input 
@@ -95,7 +95,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <Layers size={12} className="text-[#3da9d4]" /> Category Type *
             </label>
             <div className="flex gap-2 p-1 bg-slate-50 rounded-xl border border-slate-100">
@@ -104,7 +104,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
                   key={type}
                   type="button"
                   onClick={() => setFormData({...formData, type: type as any})}
-                  className={`flex-1 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                  className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-lg transition-all ${
                     formData.type === type 
                       ? (type === "Income" ? "bg-emerald-600 text-white shadow-md" : "bg-rose-600 text-white shadow-md")
                       : "bg-transparent text-slate-400 hover:text-slate-600"
@@ -117,14 +117,14 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1">Status</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Status</label>
             <div className="flex gap-2">
               {["Active", "Inactive"].map((status) => (
                 <button
                   key={status}
                   type="button"
                   onClick={() => setFormData({...formData, status: status as any})}
-                  className={`flex-1 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl border transition-all ${
+                  className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-xl border transition-all ${
                     formData.status === status 
                       ? "bg-slate-800 text-white border-slate-800 shadow-md" 
                       : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"

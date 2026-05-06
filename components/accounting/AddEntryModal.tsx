@@ -89,7 +89,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <Wallet size={12} className="text-[#3da9d4]" /> Select Account *
             </label>
             <select 
@@ -104,7 +104,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <Tag size={12} className="text-[#3da9d4]" /> Select Category *
             </label>
             <select 
@@ -120,7 +120,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
                 Amount *
               </label>
               <div className="relative">
@@ -138,7 +138,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
                 <Calendar size={12} className="text-slate-400" /> Date *
               </label>
               <input 
@@ -152,7 +152,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
               <MessageSquare size={12} className="text-slate-400" /> Remarks
             </label>
             <textarea 
