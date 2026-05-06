@@ -12,6 +12,7 @@ export default async function OperatorsPage() {
   return (
     <div className="h-[calc(100vh-144px)] animate-in fade-in duration-500 p-4 lg:p-0">
       <OperatorList initialOperators={operators} accounts={accounts} />
+      
     </div>
   );
 }
