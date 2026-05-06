@@ -260,7 +260,21 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                 </button>
               </div>
               {isLoading && <Loader2 size={18} className="text-[#3da9d4] animate-spin" />}
+              <div className="flex items-center gap-4">
+                {selectedTicketIds.length > 0 && activeTab === "bookings" && (
+                  <div className="flex items-center gap-3">
+
+                    <button
+                      onClick={handleSettle}
+                      className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-black hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100 flex items-center gap-2"
+                    >
+                      <Banknote size={18} /> Settle Selected
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
+
 
             {activeTab === "bookings" ? (
               allTickets.length === 0 && !isLoading ? (
@@ -275,7 +289,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                   <table className="w-full text-left">
                     <thead>
                       <tr className="text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
-                        <th className="px-4 py-3 w-10">
+                        <th className="px-4 py-3 w-10 flex items-center gap-2">
                           <input
                             type="checkbox"
                             className="rounded border-slate-300"
@@ -288,6 +302,9 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                               }
                             }}
                           />
+                          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
+                           ({selectedTicketIds.length})
+                          </span>
                         </th>
                         <th className="px-4 py-3">Passenger</th>
                         <th className="px-4 py-3">Route & Date</th>
@@ -458,21 +475,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
         {/* Footer */}
         <div className="p-8 pt-4 flex items-center justify-between bg-slate-50/50 border-t border-slate-100">
-          <div className="flex items-center gap-4">
-            {selectedTicketIds.length > 0 && activeTab === "bookings" && (
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
-                  {selectedTicketIds.length} Selected
-                </span>
-                <button
-                  onClick={handleSettle}
-                  className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-black hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100 flex items-center gap-2"
-                >
-                  <Banknote size={18} /> Settle Selected
-                </button>
-              </div>
-            )}
-          </div>
+
           <button
             onClick={onClose}
             className="px-8 py-3 bg-white text-slate-600 rounded-xl font-black text-sm hover:bg-slate-50 transition-all border border-slate-200 shadow-sm"
