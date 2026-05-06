@@ -136,7 +136,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-md">
-      <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-6xl overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-7xl overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
 
         {/* Header */}
         <div className="p-8 pb-6 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
