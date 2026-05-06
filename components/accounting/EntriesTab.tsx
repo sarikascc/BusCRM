@@ -149,9 +149,9 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
           <button onClick={resetFilters} className="p-2 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 transition-all">
             <RotateCcw size={18} />
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold hover:bg-slate-900 transition-all">
+          {/* <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold hover:bg-slate-900 transition-all">
             <Download size={16} /> Export
-          </button>
+          </button> */}
         </div>
       </div>
 
