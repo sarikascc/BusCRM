@@ -505,11 +505,11 @@ export default function TicketBookingList({
                 <th className="px-6 py-4  text-[12px]">Passenger</th>
                 <th className="px-6 py-4  text-[12px]">Route & Pickup</th>
                 <th className="px-6 py-4  text-[12px]">Journey</th>
-                <th className="px-6 py-4  text-[12px] text-center">Seats</th>
+                <th className="px-6 py-4  text-[12px]">Seats</th>
                 {/* <th className="px-6 py-4  text-[12px]">Bus & Type</th> */}
                 <th className="px-6 py-4  text-[11px]">Operator </th>
                 <th className="px-6 py-4  text-[11px]">Amount</th>
-                <th className="px-6 py-4  text-[11px]">Payment Collection</th>
+                <th className="px-6 py-4  text-[11px] ">Payment Collection</th>
                 <th className="px-6 py-4  text-[11px] text-right">Actions</th>
               </tr>
             </thead>
@@ -570,7 +570,7 @@ export default function TicketBookingList({
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-6 py-4 ">
                     <div className="flex flex-col">
                       <span className="text-sm font-black text-slate-800">
                         {ticket.seat_numbers}  / {ticket.total_seats}
@@ -618,7 +618,7 @@ export default function TicketBookingList({
 
                   <td className="px-6 py-4">
                     {ticket.settlement_id ? (
-                      <div className="flex flex-col items-start">
+                      <div className="flex flex-col  ">
                         <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded-[6px] font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">
                           <CheckCircle2 className="w-3 h-3" /> SETTLED
                         </span>
