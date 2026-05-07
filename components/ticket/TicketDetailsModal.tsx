@@ -250,7 +250,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                   <div className="text-xl font-black text-slate-800 tracking-tight">
                     Rs. {Number(booking.amount || 0).toLocaleString()}
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+                  <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                     <span
                       className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${!booking.operator_id
                         ? "bg-blue-50 text-blue-600 border border-blue-100"
