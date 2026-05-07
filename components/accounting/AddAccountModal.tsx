@@ -228,7 +228,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account, i
             <button
               type="button"
               onClick={onClose}
-              className="w-full py-4 bg-slate-800 text-white rounded-2xl font-bold text-sm shadow-xl hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 shrink-0"
+              className="w-full py-3 bg-[#3da9d4] text-white rounded-[10px] font-bold text-sm shadow-xl hover:bg-brand-hover transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 shrink-0"
             >
               Close Ledger
             </button>
