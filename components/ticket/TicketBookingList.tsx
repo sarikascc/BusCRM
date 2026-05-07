@@ -491,7 +491,7 @@ export default function TicketBookingList({
                   <input
                     type="checkbox"
                     checked={
-                      currentTickets.some((ticket) => !ticket.settlement_id ) &&
+                      currentTickets.some((ticket) => !ticket.settlement_id) &&
                       currentTickets
                         .filter((ticket) => !ticket.settlement_id)
                         .every((ticket) => selectedTicketIds.includes(ticket.id))
@@ -623,9 +623,14 @@ export default function TicketBookingList({
                           <CheckCircle2 className="w-3 h-3" /> SETTLED
                         </span>
                         {ticket.paid_to_operator_name && (
-                          <span className="text-[9px] text-slate-500 font-bold mt-1.5 ml-1 flex items-center gap-1">
-                            <User size={10} className="text-slate-400" /> {ticket.paid_to_operator_name}
-                          </span>
+                          <div>
+                            <span className="text-[9px] text-slate-500 font-bold mt-1.5 ml-1 flex items-center gap-1">
+                              <User size={10} className="text-slate-400" /> {ticket.paid_to_operator_name}
+                            </span>
+                            <span className="text-[9px] text-slate-500 font-bold mt-0.5 ml-1 flex items-center gap-1">
+                              <Phone size={10} className="text-slate-400" /> {ticket.operator?.mobile_number || "N/A"}
+                            </span>
+                          </div>
                         )}
                       </div>
                     ) : (
