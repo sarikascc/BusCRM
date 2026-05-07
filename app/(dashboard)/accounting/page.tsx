@@ -7,7 +7,7 @@ export default async function AccountingPage() {
   const entries = await getEntries();
 
   return (
-    <div className="h-full flex flex-col p-4 gap-4 overflow-hidden">
+    <div className="h-full flex flex-col gap-4 overflow-hidden">
     
 
       <AccountingDashboard  
