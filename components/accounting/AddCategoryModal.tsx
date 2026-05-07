@@ -118,16 +118,16 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
 
           <div className="space-y-1.5">
             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Status</label>
-            <div className="flex gap-2">
+            <div className="flex p-1 bg-slate-50 border border-slate-200 rounded-[10px] h-11">
               {["Active", "Inactive"].map((status) => (
                 <button
                   key={status}
                   type="button"
                   onClick={() => setFormData({...formData, status: status as any})}
-                  className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-xl border transition-all ${
+                  className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-lg transition-all ${
                     formData.status === status 
-                      ? "bg-slate-800 text-white border-slate-800 shadow-md" 
-                      : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
+                      ? "bg-white text-[#3da9d4] shadow-sm border border-slate-100" 
+                      : "bg-transparent text-slate-400 hover:text-slate-600"
                   }`}
                 >
                   {status}
