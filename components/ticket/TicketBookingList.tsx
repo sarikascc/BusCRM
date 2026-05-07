@@ -618,8 +618,8 @@ export default function TicketBookingList({
 
                   <td className="px-6 py-4">
                     {ticket.settlement_id ? (
-                      <div className="flex flex-col">
-                        <span className="text-[10px] bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">
+                      <div className="flex flex-col items-start">
+                        <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded-[6px] font-black w-fit border border-emerald-200 flex items-center gap-1 uppercase tracking-widest shadow-sm">
                           <CheckCircle2 className="w-3 h-3" /> SETTLED
                         </span>
                         {ticket.paid_to_operator_name && (
