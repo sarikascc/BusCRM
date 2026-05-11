@@ -47,8 +47,8 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.operator_name || !formData.person_name || !formData.mobile_number) {
+
+    if (!formData.operator_name || !formData.mobile_number) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -67,7 +67,7 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
         await createOperator(data);
         toast.success("Operator created successfully");
       }
-      
+
       onClose();
       router.refresh();
     } catch (error: any) {
@@ -112,16 +112,17 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-1.5">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
-                <User size={12} className="text-slate-400" /> Contact Person *
+                <User size={12} className="text-slate-400" /> Contact Person
               </label>
               <input
-                required
+
                 type="text"
                 placeholder="Full Name"
                 className="input-primary h-11 rounded-[10px] font-bold text-sm"
                 value={formData.person_name}
                 onChange={(e) => setFormData({ ...formData, person_name: e.target.value })}
               />
+             
             </div>
 
             <div className="space-y-1.5">
@@ -167,11 +168,10 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
                     key={status}
                     type="button"
                     onClick={() => setFormData({ ...formData, status: status as any })}
-                    className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-[10px] transition-all ${
-                      formData.status === status
+                    className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-[10px] transition-all ${formData.status === status
                         ? "bg-white text-[#3da9d4] shadow-sm border border-slate-100"
                         : "text-slate-400 hover:text-slate-600"
-                    }`}
+                      }`}
                   >
                     {status}
                   </button>

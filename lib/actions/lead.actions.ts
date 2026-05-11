@@ -370,3 +370,13 @@ export async function getConfirmedLeads() {
 
   return data || [];
 }
+
+export async function deleteLead(leadId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("leads").delete().eq("id", leadId);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/enquiry");
+  revalidatePath("/follow-ups");
+  revalidatePath("/");
+}

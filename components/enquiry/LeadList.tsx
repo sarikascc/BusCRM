@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { updateLeadStatus } from "@/lib/actions/lead.actions";
+import { updateLeadStatus, deleteLead } from "@/lib/actions/lead.actions";
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +27,7 @@ import {
   PhoneCall,
   RefreshCw,
   Info,
+  Trash2,
 } from "lucide-react";
 
 export default function LeadList({
@@ -73,6 +74,8 @@ export default function LeadList({
 
   const [infoLead, setInfoLead] = useState<any>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+  const [deleteConfirmLead, setDeleteConfirmLead] = useState<any>(null);
 
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -194,6 +197,24 @@ export default function LeadList({
       router.refresh();
     } catch (error: any) {
       alert("Failed to update status: " + error.message);
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  async function handleDeleteLead(lead: any) {
+    setDeleteConfirmLead(lead);
+  }
+
+  async function confirmDeleteLead() {
+    if (!deleteConfirmLead) return;
+    try {
+      setLoadingId(deleteConfirmLead.id);
+      await deleteLead(deleteConfirmLead.id);
+      setDeleteConfirmLead(null);
+      router.refresh();
+    } catch (error: any) {
+      alert("Failed to delete lead: " + error.message);
     } finally {
       setLoadingId(null);
     }
@@ -647,27 +668,47 @@ export default function LeadList({
                           )}
 
                           {/* 2. THE REST OF THE ACTIONS */}
-                          {lead.status === "Cancelled" &&
-                            (lead.notes || lead.cancellation_reason) ? (
-                            <div className="flex items-center justify-end">
+                          {lead.status === "Cancelled" ? (
+                            <div className="flex items-center justify-end gap-1">
+                              {(lead.notes || lead.cancellation_reason) && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() => openDrawer(lead)}
+                                      className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-colors border border-rose-100 bg-rose-50 shadow-sm"
+                                    >
+                                      <AlertCircle className="w-4 h-4" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="left">
+                                    <p className="text-xs font-semibold">
+                                      View Cancellation Reason
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
-                                    onClick={() => openDrawer(lead)}
-                                    className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-colors border border-rose-100 bg-rose-50 shadow-sm"
+                                    onClick={() => handleDeleteLead(lead)}
+                                    className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-colors"
                                   >
-                                    <AlertCircle className="w-4 h-4" />
+                                    {loadingId === lead.id ? (
+                                      <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                      <Trash2 className="w-4 h-4" />
+                                    )}
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent side="left">
                                   <p className="text-xs font-semibold">
-                                    View Cancellation Reason
+                                    Delete Lead
                                   </p>
                                 </TooltipContent>
                               </Tooltip>
                             </div>
-                          ) : lead.status === "Booked" ||
-                            lead.status === "Cancelled" ? (
+                          ) : lead.status === "Booked" ? (
                             <span className="text-xs text-slate-400 italic font-medium ml-2 mr-1">
                               Completed
                             </span>
@@ -973,6 +1014,60 @@ export default function LeadList({
                   </div>
                 </div>
               )}
+          </div>
+        </div>
+      )}
+      {deleteConfirmLead && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/40 p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 pb-0 flex justify-end">
+              <button
+                onClick={() => setDeleteConfirmLead(null)}
+                className="text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-8 pb-8 pt-2">
+              <div className="flex items-start gap-5">
+                <div className="shrink-0 w-12 h-12 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
+                  <Trash2 className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                    Delete Lead
+                  </h3>
+                  <p className="text-slate-500 leading-relaxed">
+                    Are you sure you want to delete{" "}
+                    <strong className="text-slate-800 font-bold">
+                      {deleteConfirmLead.customer_name}
+                    </strong>
+                    ? This action cannot be undone.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+              <button
+                onClick={() => setDeleteConfirmLead(null)}
+                className="px-6 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-200/50 rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteLead}
+                disabled={loadingId === deleteConfirmLead.id}
+                className="px-6 py-2.5 text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 rounded-xl transition-all shadow-md shadow-rose-200 flex items-center gap-2"
+              >
+                {loadingId === deleteConfirmLead.id ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Yes, Delete"
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

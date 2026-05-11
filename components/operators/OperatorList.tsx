@@ -161,7 +161,7 @@ export default function OperatorList({ initialOperators, accounts = [] }: Props)
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-slate-700 font-semibold">{operator.person_name}</div>
+                    <div className="text-sm text-slate-700 font-semibold">{operator.person_name || "-"}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-slate-600 font-bold tracking-wide">{operator.mobile_number}</div>
