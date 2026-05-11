@@ -10,9 +10,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   operator?: Operator | null;
+  onSuccess?: (operator: Operator) => void;
 }
 
-export default function OperatorModal({ isOpen, onClose, operator }: Props) {
+export default function OperatorModal({ isOpen, onClose, operator, onSuccess }: Props) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.operator_name || !formData.mobile_number) {
+    if (!formData.operator_name ) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -64,8 +65,9 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
         await updateOperator(operator.id, data);
         toast.success("Operator updated successfully");
       } else {
-        await createOperator(data);
+        const newOp = await createOperator(data);
         toast.success("Operator created successfully");
+        if (onSuccess) onSuccess(newOp as any);
       }
 
       onClose();
@@ -127,12 +129,12 @@ export default function OperatorModal({ isOpen, onClose, operator }: Props) {
 
             <div className="space-y-1.5">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1.5">
-                <Phone size={12} className="text-slate-400" /> Mobile Number *
+                <Phone size={12} className="text-slate-400" /> Mobile Number 
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">+91</span>
                 <input
-                  required
+                
                   type="tel"
                   placeholder="1234567890"
                   className="input-primary pl-12 h-11 rounded-[10px] font-bold text-sm tracking-wider"

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import OperatorModal from "@/components/operators/OperatorModal";
 
 interface City {
   id: string;
@@ -207,10 +208,12 @@ function OperatorSelector({
   operators,
   selectedOperatorId,
   onSelect,
+  onCreateClick,
 }: {
   operators: Operator[];
   selectedOperatorId: string;
   onSelect: (operatorId: string) => void;
+  onCreateClick: () => void;
 }) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -258,27 +261,38 @@ function OperatorSelector({
 
   return (
     <div ref={wrapperRef} className="relative">
-      <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">Operator *</label>
+      <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+        Operator *
+      </label>
       <input type="hidden" name="operator_id" value={selectedOperatorId} />
-      <div className="relative">
-        <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          value={inputValue}
-          autoComplete="off"
-          required
-          onChange={(e) => {
-            setSearch(e.target.value);
-            onSelect("");
-            setIsOpen(true);
-          }}
-          onFocus={() => {
-            setSearch(selectedOperator ? selectedOperator.operator_name : "");
-            setIsOpen(true);
-          }}
-          className="input-primary w-full text-sm h-10 rounded-lg pl-10 bg-white font-bold"
-          placeholder="Search Operator"
-        />
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={inputValue}
+            autoComplete="off"
+            required
+            onChange={(e) => {
+              setSearch(e.target.value);
+              onSelect("");
+              setIsOpen(true);
+            }}
+            onFocus={() => {
+              setSearch(selectedOperator ? selectedOperator.operator_name : "");
+              setIsOpen(true);
+            }}
+            className="input-primary w-full text-sm h-10 rounded-lg pl-10 bg-white font-bold"
+            placeholder="Search Operator"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={onCreateClick}
+          className="h-10 px-4 bg-[#3da9d4] text-white rounded-lg text-sm whitespace-nowrap"
+        >
+          Create Operator
+        </button>
       </div>
 
       {isOpen && (
@@ -321,6 +335,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
   const supabase = createClient();
   const [cities, setCities] = useState<City[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOperatorModalOpen, setIsOperatorModalOpen] = useState(false);
 
   const [mobileNumber, setMobileNumber] = useState("");
   const [passengerName, setPassengerName] = useState("");
@@ -594,6 +609,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                     operator_id: operatorId,
                   }))
                 }
+                onCreateClick={() => setIsOperatorModalOpen(true)}
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -916,6 +932,18 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
           </div>
         </form>
       </div>
+
+      <OperatorModal
+        isOpen={isOperatorModalOpen}
+        onClose={() => setIsOperatorModalOpen(false)}
+        onSuccess={(newOp) => {
+          setOperators((prev) => [...prev, newOp as any].sort((a, b) => a.operator_name.localeCompare(b.operator_name)));
+          setFormDataState((prev) => ({
+            ...prev,
+            operator_id: newOp.id,
+          }));
+        }}
+      />
     </div>
   );
 }
