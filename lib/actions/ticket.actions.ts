@@ -20,6 +20,7 @@ export interface CreateTicketPayload {
   account_id?: string;
   payment_type?: "Cash" | "UPI";
   amount?: number;
+  remarks?: string;
 }
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;

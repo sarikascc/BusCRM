@@ -67,6 +67,7 @@ interface TicketBooking {
   travel_type: "AC" | "Non-AC";
   payment_type: "Cash" | "UPI";
   amount?: number | null;
+  remarks?: string | null;
 }
 
 interface Props {
@@ -361,6 +362,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
     total_seats: "1",
     operator_id: "",
     account_id: "",
+    remarks: "",
   });
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -389,6 +391,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
           total_seats: booking.total_seats?.toString() || "1",
           operator_id: booking.operator_id || "",
           account_id: booking.account_id || "",
+          remarks: booking.remarks || "",
         });
       } else {
         setMobileNumber("");
@@ -408,6 +411,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
           total_seats: "1",
           operator_id: "",
           account_id: "",
+          remarks: "",
         });
       }
     }
@@ -540,6 +544,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
       account_id: formDataState.account_id || undefined,
       payment_type: paymentType,
       amount: parseFloat(amount) || 0,
+      remarks: formDataState.remarks,
     };
 
     try {
@@ -910,6 +915,22 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                       step="0.01"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Remarks */}
+              <div className="mt-4">
+                <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                  Remarks
+                </label>
+                <div className="relative">
+                  <textarea
+                    name="remarks"
+                    value={formDataState.remarks}
+                    onChange={handleInputChange}
+                    className="input-primary w-full text-sm min-h-[80px] py-2.5 rounded-lg pl-4 font-bold resize-none"
+                    placeholder="Any additional notes..."
+                  />
                 </div>
               </div>
             </div>

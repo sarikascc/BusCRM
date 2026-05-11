@@ -29,6 +29,11 @@ CREATE TABLE ticket_bookings (
   account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
   payment_type payment_type,
   amount DECIMAL(15, 2) DEFAULT 0,
+  remarks TEXT,
+  settlement_id UUID, -- Links to operator_settlements
+  paid_to_operator_name TEXT,
+  paid_to_operator_mobile TEXT,
+  paid_at TIMESTAMP WITH TIME ZONE,
   created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())

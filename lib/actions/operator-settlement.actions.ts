@@ -191,7 +191,12 @@ export async function getOperatorSettlements(operatorId?: string) {
     .in("settlement_id", settlementIds);
 
   if (tError) {
-    console.error(`Error fetching settlement tickets: ${tError.message}`);
+    // If column doesn't exist, log it but don't crash the app
+    if (tError.code === "PGRST204" || tError.message.includes("column") && tError.message.includes("does not exist")) {
+      console.warn("Settlement columns are missing in the database. Please run migrations.");
+    } else {
+      console.error(`Error fetching settlement tickets: ${tError.message}`);
+    }
     // Still return settlements even if tickets fail
     return settlements.map(s => ({ ...s, tickets: [] }));
   }

@@ -31,6 +31,7 @@ import {
   Loader2,
   DollarSign,
   History,
+  Info,
 } from "lucide-react";
 
 interface TicketBooking {
@@ -59,6 +60,7 @@ interface TicketBooking {
   payment_type: "Cash" | "UPI";
   settlement_id?: string | null;
   paid_to_operator_name?: string | null;
+  remarks?: string | null;
 }
 
 interface Account {
@@ -130,6 +132,7 @@ export default function TicketBookingList({
     referenceNumber: "",
     paidAmount: "",
   });
+  const [remarkToShow, setRemarkToShow] = useState<string | null>(null);
   const itemsPerPage = 10;
 
   const operatorOptions = useMemo(() => {
@@ -510,6 +513,7 @@ export default function TicketBookingList({
                 <th className="px-6 py-4  text-[11px]">Operator </th>
                 <th className="px-6 py-4  text-[11px]">Amount</th>
                 <th className="px-6 py-4  text-[11px] ">Payment Collection</th>
+                <th className="px-6 py-4  text-[11px]">Remarks</th>
                 <th className="px-6 py-4  text-[11px] text-right">Actions</th>
               </tr>
             </thead>
@@ -639,6 +643,22 @@ export default function TicketBookingList({
                       </span>
                     )}
                   </td>
+                  <td className="px-6 py-4">
+                    {ticket.remarks ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setRemarkToShow(ticket.remarks || "");
+                        }}
+                        className="p-2 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-full transition-all"
+                        title="View Remarks"
+                      >
+                        <Info size={18} />
+                      </button>
+                    ) : (
+                      <span className="text-slate-300">-</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
@@ -699,6 +719,41 @@ export default function TicketBookingList({
         }}
         onSuccess={() => router.refresh()}
       />
+
+      {/* Remark Info Modal */}
+      {remarkToShow !== null && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/40 p-3 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95">
+            <div className="p-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/70">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#3da9d4]/10 text-[#3da9d4] flex items-center justify-center">
+                  <Info size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">Booking Remark</h3>
+              </div>
+              <button
+                onClick={() => setRemarkToShow(null)}
+                className="p-2 hover:bg-white rounded-full transition-colors"
+              >
+                <X size={18} className="text-slate-400" />
+              </button>
+            </div>
+            <div className="p-8">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 min-h-[100px]">
+                <p className="text-slate-700 font-medium leading-relaxed text-start">
+                 {remarkToShow}
+                </p>
+              </div>
+              <button
+                onClick={() => setRemarkToShow(null)}
+                className="w-full mt-6 py-3 bg-brand text-white rounded-xl font-bold text-sm shadow-lg shadow-brand/20 hover:bg-brand-hover transition-all"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isSettlementOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">

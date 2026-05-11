@@ -176,6 +176,19 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                   </div>
                 </div>
               </div>
+
+              {booking.remarks && (
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> Remarks
+                  </label>
+                  <div className="bg-white p-4 rounded-[12px] border border-slate-100 shadow-sm">
+                    <p className="text-sm font-medium text-slate-700">
+                     {booking.remarks}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
