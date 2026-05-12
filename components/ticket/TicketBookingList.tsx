@@ -124,6 +124,8 @@ export default function TicketBookingList({
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isSettling, setIsSettling] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
+  const [bookingDateFilter, setBookingDateFilter] = useState(today);
   const [settlementForm, setSettlementForm] = useState({
     accountId: "",
     paymentMethod: "Cash" as "Cash" | "UPI" | "Bank Transfer",
@@ -163,10 +165,14 @@ export default function TicketBookingList({
     const matchesOperator =
       !operatorFilter || ticket.operator_id === operatorFilter;
 
+    const matchesBookingDate =
+      !bookingDateFilter || ticket.booking_date === bookingDateFilter;
+
     return (
       matchesSearch &&
       matchesSettlement &&
-      matchesOperator
+      matchesOperator &&
+      matchesBookingDate
     );
   });
 
@@ -355,6 +361,9 @@ export default function TicketBookingList({
     setTicketToDelete(ticket);
   }
 
+
+
+
   return (
     <div className="saas-card bg-white flex flex-col h-full border-t-4 border-t-[#3da9d4] overflow-hidden relative shadow-sm">
       <div className="p-4 border-b border-slate-100 flex flex-col xl:flex-row gap-3 items-center bg-slate-50/50 shrink-0">
@@ -367,6 +376,19 @@ export default function TicketBookingList({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+        </div>
+        <div>
+
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="date"
+              name="booking_date"
+              value={bookingDateFilter}
+              onChange={(e) => setBookingDateFilter(e.target.value)}
+              className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
+            />
+          </div>
         </div>
 
         <select
@@ -741,7 +763,7 @@ export default function TicketBookingList({
             <div className="p-8">
               <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 min-h-[100px]">
                 <p className="text-slate-700 font-medium leading-relaxed text-start">
-                 {remarkToShow}
+                  {remarkToShow}
                 </p>
               </div>
               <button

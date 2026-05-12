@@ -88,9 +88,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
               className="input-primary pl-10 w-64 py-2"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold hover:bg-slate-900 transition-all">
-            <Download size={16} /> Export
-          </button>
+        
         </div>
       </div>
 

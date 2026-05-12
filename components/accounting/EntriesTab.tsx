@@ -18,7 +18,14 @@ const getErrorMessage = (error: unknown) =>
   error instanceof Error ? error.message : "Something went wrong.";
 
 export default function EntriesTab({ initialEntries, accounts, categories }: Props) {
-  const [entries, setEntries] = useState(initialEntries);
+  const today = new Date().toISOString().split("T")[0];
+  const [entries, setEntries] = useState<Entry[]>(() => {
+    // પેજ લોડ થતી વખતે માત્ર આજની જ એન્ટ્રીઝ બતાવવા માટે ફિલ્ટર
+    return initialEntries.filter(entry =>
+      new Date(entry.date).toISOString().split("T")[0] === today
+    );
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"Income" | "Expense">("Income");
   const [mounted, setMounted] = useState(false);
@@ -28,11 +35,10 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
   useEffect(() => {
     setMounted(true);
   }, []);
-
   const [filters, setFilters] = useState({
     search: "",
-    startDate: "",
-    endDate: "",
+    startDate: today,
+    endDate: today,
     type: "Both",
     accountId: "",
     categoryId: "",
@@ -49,21 +55,35 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
     };
   }, [entries]);
 
+  const sortedEntries = useMemo(() => {
+    const sortableEntries = [...entries];
+    return sortableEntries.sort((a, b) => {
+      // Primary sort: by date descending (newest first)
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      if (dateA !== dateB) {
+        return dateB - dateA;
+      }
+      // Secondary sort: by amount descending
+      return b.amount - a.amount;
+    });
+  }, [entries]);
+
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const resetFilters = () => {
+    const today = new Date().toISOString().split("T")[0];
     setFilters({
       search: "",
-      startDate: "",
-      endDate: "",
+      startDate: today,
+      endDate: today,
       type: "Both",
       accountId: "",
       categoryId: "",
     });
-    setEntries(initialEntries);
   };
 
   // Auto-apply filters when any filter value changes
@@ -125,7 +145,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
               placeholder="Search remarks..."
               value={filters.search}
               onChange={handleFilterChange}
-              className="input-primary pl-10 w-48 py-2"
+              className="input-primary pl-10 w-90 py-2"
             />
           </div>
 
@@ -169,9 +189,9 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
           </thead>
           <tbody className="divide-y divide-slate-50">
             {entries.length === 0 ? (
-              <tr><td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium">No transactions found.</td></tr>
+              <tr><td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium">No entries found.</td></tr>
             ) : (
-              entries.map((entry) =>
+              sortedEntries.map((entry) =>
                 createElement(
                   "tr",
                   {
@@ -180,7 +200,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
                   },
                   [
                     <td key="date" className="px-6 py-4 text-sm text-slate-600 font-medium">
-                      {mounted ? new Date(entry.date).toLocaleDateString() : entry.date}
+                      {mounted ? new Date(entry.date).toLocaleDateString("en-GB") : entry.date}
                     </td>,
                     <td key="type" className="px-6 py-4">
                       <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${entry.type === "Income" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"

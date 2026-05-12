@@ -698,7 +698,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                       name="journey_date"
                       value={formDataState.journey_date}
                       onChange={handleInputChange}
-                      min={todayStr}
+                      min={booking ? undefined : todayStr}
                       className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
                     />
                   </div>
@@ -904,10 +904,10 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                     Amount *
                   </label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+
                     <input
                       required
-                      type="number"
+                      type="text"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
