@@ -44,6 +44,8 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
   const [selectedTicketIds, setSelectedTicketIds] = useState<string[]>([]);
   const [isSettling, setIsSettling] = useState(false);
   const [isSettlementFormOpen, setIsSettlementFormOpen] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
+  const [bookingDateFilter, setBookingDateFilter] = useState(today);
   const [settlementForm, setSettlementForm] = useState({
     accountId: "",
     paymentMethod: "Cash" as "Cash" | "UPI" | "Bank Transfer",
@@ -53,8 +55,21 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
     paidAmount: "",
   });
 
+  const filteredTickets = allTickets.filter(ticket => {
+    return !bookingDateFilter || ticket.booking_date === bookingDateFilter;
+  });
+
+  const filteredSettlements = settlements.filter(s => {
+    const sDate = new Date(s.created_at).toISOString().split('T')[0];
+    return !bookingDateFilter || sDate === bookingDateFilter;
+  });
+
+  const visibleUnsettledCount = filteredTickets.filter(t => !t.settlement_id).length;
+
   useEffect(() => {
     if (isOpen && operator) {
+      setBookingDateFilter(today); 
+      setSelectedTicketIds([]); 
       fetchData();
     }
   }, [isOpen, operator]);
@@ -79,7 +94,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
   const handleSettle = async () => {
     if (selectedTicketIds.length === 0) return;
 
-    const selectedTickets = unsettledTickets.filter(t => selectedTicketIds.includes(t.id));
+    const selectedTickets = allTickets.filter(t => selectedTicketIds.includes(t.id));
     const totalAmount = selectedTickets.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
     const commissionPercentage = Number(operator.commission_percentage) || 0;
     const commissionAmount = (totalAmount * commissionPercentage) / 100;
@@ -92,15 +107,15 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
     setIsSettlementFormOpen(true);
   };
 
-     const handleProcessSettlementSubmit = async () => {
-     if (!settlementForm.receiverMobile) {
-       toast.error("Please fill receiver details");
-       return;
-     }
+  const handleProcessSettlementSubmit = async () => {
+    if (!settlementForm.receiverMobile) {
+      toast.error("Please fill receiver details");
+      return;
+    }
 
     setIsSettling(true);
     try {
-      const selectedTickets = unsettledTickets.filter(t => selectedTicketIds.includes(t.id));
+      const selectedTickets = allTickets.filter(t => selectedTicketIds.includes(t.id));
       const totalAmount = selectedTickets.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
       const commissionPercentage = Number(operator.commission_percentage) || 0;
       const commissionAmount = (totalAmount * commissionPercentage) / 100;
@@ -199,7 +214,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                       <Receipt size={14} className="text-[#3da9d4]" />
                     </div>
                   </div>
-                  <div className="text-2xl font-black text-slate-800 tracking-tight">{settlements.length}</div>
+                  <div className="text-2xl font-black text-slate-800 tracking-tight">{filteredSettlements.length}</div>
                 </div>
                 <div className="bg-slate-50/50 p-3 rounded-[12px] border border-slate-100 group hover:border-emerald-200 transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-2">
@@ -209,7 +224,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                     </div>
                   </div>
                   <div className="text-2xl font-black text-emerald-600 tracking-tight">
-                    ₹{settlements.reduce((sum, s) => sum + (Number(s.paid_amount) || 0), 0).toLocaleString()}
+                    ₹{filteredSettlements.reduce((sum, s) => sum + (Number(s.paid_amount) || 0), 0).toLocaleString()}
                   </div>
                 </div>
                 <div className="bg-slate-50/50 p-3 rounded-[12px] border border-slate-100 group hover:border-amber-200 transition-all shadow-sm">
@@ -220,7 +235,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                     </div>
                   </div>
                   <div className="text-2xl font-black text-amber-600 tracking-tight">
-                    ₹{allTickets.filter(t => !t.settlement_id).reduce((sum, t) => sum + (Number(t.amount) || 0), 0).toLocaleString()}
+                    ₹{filteredTickets.filter(t => !t.settlement_id).reduce((sum, t) => sum + (Number(t.amount) || 0), 0).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -236,7 +251,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                   All Bookings
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === "bookings" ? "bg-[#3da9d4]/10 text-[#3da9d4]" : "bg-slate-100 text-slate-500"
                     }`}>
-                    {allTickets.length}
+                    {filteredTickets.length}
                   </span>
                   {activeTab === "bookings" && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#3da9d4] rounded-t-full shadow-[0_-2px_10px_rgba(61,169,212,0.4)]" />
@@ -252,15 +267,19 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                   Settlement History
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === "history" ? "bg-[#3da9d4]/10 text-[#3da9d4]" : "bg-slate-100 text-slate-500"
                     }`}>
-                    {settlements.length}
+                    {filteredSettlements.length}
                   </span>
                   {activeTab === "history" && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#3da9d4] rounded-t-full shadow-[0_-2px_10px_rgba(61,169,212,0.4)]" />
                   )}
                 </button>
+
+
+
               </div>
+
               {isLoading && <Loader2 size={18} className="text-[#3da9d4] animate-spin" />}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center ">
                 {selectedTicketIds.length > 0 && activeTab === "bookings" && (
                   <div className="flex items-center gap-3">
 
@@ -272,12 +291,23 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                     </button>
                   </div>
                 )}
+
+              </div>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="date"
+                  name="booking_date"
+                  value={bookingDateFilter}
+                  onChange={(e) => setBookingDateFilter(e.target.value)}
+                  className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
+                />
               </div>
             </div>
 
 
             {activeTab === "bookings" ? (
-              allTickets.length === 0 && !isLoading ? (
+              filteredTickets.length === 0 && !isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                   <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                     <Bus size={24} className="text-slate-200" />
@@ -293,19 +323,20 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                           <input
                             type="checkbox"
                             className="rounded border-slate-300"
-                            checked={allTickets.filter(t => !t.settlement_id).length > 0 && allTickets.filter(t => !t.settlement_id).every(t => selectedTicketIds.includes(t.id))}
+                            checked={visibleUnsettledCount > 0 && filteredTickets.filter(t => !t.settlement_id).every(t => selectedTicketIds.includes(t.id))}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedTicketIds(allTickets.filter(t => !t.settlement_id).map(t => t.id));
+                                setSelectedTicketIds(filteredTickets.filter(t => !t.settlement_id).map(t => t.id));
                               } else {
                                 setSelectedTicketIds([]);
                               }
                             }}
                           />
                           <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
-                           ({selectedTicketIds.length})
+                            ({selectedTicketIds.length})
                           </span>
                         </th>
+                        <th className="px-4 py-3">Booking Date</th>
                         <th className="px-4 py-3">Passenger</th>
                         <th className="px-4 py-3">Route & Date</th>
                         <th className="px-4 py-3">Booking Account</th>
@@ -314,7 +345,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
-                      {allTickets.map((ticket) => (
+                      {filteredTickets.map((ticket) => (
                         <tr
                           key={ticket.id}
                           className={`hover:bg-slate-50/50 transition-colors cursor-pointer ${selectedTicketIds.includes(ticket.id) ? "bg-emerald-50/30" : ""}`}
@@ -333,6 +364,11 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                                 className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                               />
                             )}
+                          </td>
+                          <td className="px-4 py-4">
+                            <p className="text-[11px] font-bold text-slate-800 tracking-wider">
+                              {new Date(ticket.booking_date).toLocaleDateString("en-GB")}
+                            </p>
                           </td>
                           <td className="px-4 py-4">
                             <p className="text-[11px] font-bold text-slate-800 tracking-wider">{ticket.passenger_name}</p>
@@ -376,7 +412,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                 </div>
               )
             ) : (
-              settlements.length === 0 && !isLoading ? (
+              filteredSettlements.length === 0 && !isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                   <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                     <Banknote size={24} className="text-slate-200" />
@@ -397,7 +433,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {settlements.map((settlement) => (
+                      {filteredSettlements.map((settlement) => (
                         <tr key={settlement.id} className="hover:bg-slate-50/50 transition-colors group">
 
                           {/* Info Column */}
