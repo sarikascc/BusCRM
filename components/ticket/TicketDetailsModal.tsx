@@ -251,7 +251,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                       {booking.seat_numbers || "N/A"}
                     </span>
                   </div>
-                  <span className="inline-flex text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                  <span className="inline-flex text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-[5px] uppercase tracking-widest">
                     {booking.total_seats || 0} {booking.total_seats > 1 ? "Passengers" : "Passenger"}
                   </span>
                 </div>
@@ -265,7 +265,7 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                     <span
-                      className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5 ${!booking.operator_id
+                      className={`text-[10px] font-black px-3 py-1.5 rounded-[5px] uppercase tracking-widest flex items-center gap-1.5 ${!booking.operator_id
                         ? "bg-blue-50 text-blue-600 border border-blue-100"
                         : booking.settlement_id
                           ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
@@ -275,8 +275,9 @@ export default function TicketDetailsModal({ isOpen, onClose, booking }: Props) 
                       {(!booking.operator_id || booking.settlement_id) ? <CheckCircle2 size={12} /> : null}
                       {!booking.operator_id ? "Collected" : booking.settlement_id ? "Settled" : "Unsettled"}
                     </span>
-                    <span className="text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full uppercase tracking-widest border border-slate-200">
-                      {booking.payment_type || "N/A"}
+                    <span className="text-[11px] font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-[5px] uppercase tracking-widest border border-slate-200">
+                      {/* {booking.payment_type || "N/A"} */}
+                            {booking.account?.name ? ` ${booking.account.name} ` : ""}
                     </span>
                   </div>
                 </div>

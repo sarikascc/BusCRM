@@ -46,7 +46,7 @@ export default function CategoriesTab({ initialCategories }: Props) {
       toast.success("Category deleted successfully");
       setCategoryToDelete(null);
     } catch (error: unknown) {
-      toast.error(getErrorMessage(error));
+      toast.error(getErrorMessage(error), { duration: 6000 });
     } finally {
       setIsDeleting(false);
     }

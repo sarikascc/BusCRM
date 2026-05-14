@@ -228,6 +228,29 @@ export async function createEntry(data: Omit<Entry, "id" | "created_at">) {
 
 export async function updateEntry(id: string, data: Partial<Entry>) {
   const supabase = await createClient();
+  const { data: existingEntry, error: fetchError } = await supabase
+    .from("entries")
+    .select("remarks, category_id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) throw new Error(fetchError.message);
+
+  const { data: category, error: categoryError } = await supabase
+    .from("categories")
+    .select("name")
+    .eq("id", existingEntry.category_id)
+    .single();
+
+  if (categoryError) throw new Error(categoryError.message);
+  if (category?.name === "Ticket Booking") {
+    throw new Error("Only entries added directly from the Entries page can be edited.");
+  }
+
+  if (existingEntry?.remarks?.match(/\[TID:[^\]]+\]|Operator Settlement/i)) {
+    throw new Error("Only entries added directly from the Entries page can be edited.");
+  }
+
   const { error } = await supabase
     .from("entries")
     .update(data)

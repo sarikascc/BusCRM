@@ -41,7 +41,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name) {
-      toast.error("Category name is required.");
+      toast.error("Category name is required.", { duration: 6000 });
       return;
     }
 
@@ -56,7 +56,7 @@ export default function AddCategoryModal({ isOpen, onClose, onSuccess, category 
       }
       onSuccess();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, { duration: 6000 });
     } finally {
       setIsSubmitting(false);
     }

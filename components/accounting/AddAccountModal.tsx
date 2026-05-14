@@ -61,7 +61,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account, i
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name) {
-      toast.error("Account name is required.");
+      toast.error("Account name is required.", { duration: 6000 });
       return;
     }
 
@@ -81,7 +81,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, account, i
       }
       onSuccess();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, { duration: 6000 });
     } finally {
       setIsSubmitting(false);
     }

@@ -50,7 +50,7 @@ export default function OperatorModal({ isOpen, onClose, operator, onSuccess }: 
     e.preventDefault();
 
     if (!formData.operator_name ) {
-      toast.error("Please fill all required fields");
+      toast.error("Please fill all required fields", { duration: 6000 });
       return;
     }
 
@@ -73,7 +73,7 @@ export default function OperatorModal({ isOpen, onClose, operator, onSuccess }: 
       onClose();
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, { duration: 6000 });
     } finally {
       setIsSubmitting(false);
     }

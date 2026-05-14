@@ -61,7 +61,7 @@ export default function AccountsTab({ initialAccounts }: Props) {
       toast.success("Account deleted successfully");
       setAccountToDelete(null);
     } catch (error: unknown) {
-      toast.error(getErrorMessage(error));
+      toast.error(getErrorMessage(error), { duration: 6000 });
     } finally {
       setIsDeleting(false);
     }

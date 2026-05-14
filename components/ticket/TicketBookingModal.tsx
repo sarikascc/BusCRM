@@ -516,13 +516,13 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
     setIsSubmitting(true);
 
     if (!fromCity?.id || !toCity?.id) {
-      toast.error("Please select a valid Pickup and Drop city.");
+      toast.error("Please select a valid Pickup and Drop city.", { duration: 6000 });
       setIsSubmitting(false);
       return;
     }
 
     if (!formDataState.operator_id) {
-      toast.error("Please select a valid Operator.");
+      toast.error("Please select a valid Operator.", { duration: 6000 });
       setIsSubmitting(false);
       return;
     }
@@ -571,7 +571,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error(booking ? "Failed to update booking." : "Failed to add ticket booking.");
+      toast.error(booking ? "Failed to update booking." : "Failed to add ticket booking.", { duration: 6000 });
     } finally {
       setIsSubmitting(false);
     }
@@ -686,6 +686,21 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
 
               {/* Journey Dates */}
               <div className="grid grid-cols-2 gap-4">
+                 <div>
+                  <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
+                    Booking Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input
+                      type="date"
+                      name="booking_date"
+                      value={formDataState.booking_date}
+                      onChange={handleInputChange}
+                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
                     Journey Date *
@@ -703,21 +718,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wide mb-1.5 ml-1">
-                    Booking Date
-                  </label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                      type="date"
-                      name="booking_date"
-                      value={formDataState.booking_date}
-                      onChange={handleInputChange}
-                      className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
-                    />
-                  </div>
-                </div>
+               
               </div>
 
               {/* Bus & Time */}

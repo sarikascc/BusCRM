@@ -57,9 +57,13 @@ interface TicketBooking {
     commission_percentage?: number | string | null;
   } | null;
   amount?: number | null;
-  payment_type: "Cash" | "UPI";
+  payment_type: "Cash" | "UPI" ;
   settlement_id?: string | null;
   paid_to_operator_name?: string | null;
+  account_id?: string | null;
+  account?: {
+    name?: string | null;
+  } | null;
   remarks?: string | null;
 }
 
@@ -125,7 +129,8 @@ export default function TicketBookingList({
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isSettling, setIsSettling] = useState(false);
   const today = new Date().toISOString().split("T")[0];
-  const [bookingDateFilter, setBookingDateFilter] = useState(today);
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
   const [settlementForm, setSettlementForm] = useState({
     accountId: "",
     paymentMethod: "Cash" as "Cash" | "UPI" | "Bank Transfer",
@@ -166,7 +171,8 @@ export default function TicketBookingList({
       !operatorFilter || ticket.operator_id === operatorFilter;
 
     const matchesBookingDate =
-      !bookingDateFilter || ticket.booking_date === bookingDateFilter;
+      (!startDate || ticket.booking_date >= startDate) &&
+      (!endDate || ticket.booking_date <= endDate);
 
     return (
       matchesSearch &&
@@ -235,6 +241,8 @@ export default function TicketBookingList({
     setOperatorFilter("");
     setSelectedTicketIds([]);
     setCurrentPage(1);
+    setStartDate(today);
+    setEndDate(today);
   };
 
   const handleToggleTicket = (
@@ -244,12 +252,12 @@ export default function TicketBookingList({
     e.stopPropagation();
 
     if (ticket.settlement_id) {
-      toast.error("This ticket is already settled.");
+      toast.error("This ticket is already settled.", { duration: 6000 });
       return;
     }
 
     if (!ticket.operator_id) {
-      toast.error("Ticket operator is missing.");
+      toast.error("Ticket operator is missing.", { duration: 6000 });
       return;
     }
 
@@ -260,7 +268,7 @@ export default function TicketBookingList({
 
       const existingOperatorId = selectedTickets[0]?.operator_id;
       if (existingOperatorId && existingOperatorId !== ticket.operator_id) {
-        toast.error("Please select tickets from one operator at a time.");
+        toast.error("Please select tickets from one operator at a time.", { duration: 6000 });
         return current;
       }
 
@@ -280,7 +288,7 @@ export default function TicketBookingList({
     );
 
     if (!operatorFilter && operatorIds.length > 1) {
-      toast.error("Please filter one operator before selecting all.");
+      toast.error("Please filter one operator before selecting all.", { duration: 6000 });
       return;
     }
 
@@ -296,7 +304,7 @@ export default function TicketBookingList({
 
   const handleOpenSettlement = () => {
     if (!canSettleSelection) {
-      toast.error("Please select unsettled tickets from one operator.");
+      toast.error("Please select unsettled tickets from one operator.", { duration: 6000 });
       return;
     }
 
@@ -311,12 +319,12 @@ export default function TicketBookingList({
 
   const handleProcessSettlement = async () => {
     if (!canSettleSelection) {
-      toast.error("Please select unsettled tickets from one operator.");
+      toast.error("Please select unsettled tickets from one operator.", { duration: 6000 });
       return;
     }
 
     if (!settlementForm.receiverMobile) {
-      toast.error("Please fill settlement  receiver details.");
+      toast.error("Please fill settlement  receiver details.", { duration: 6000 });
       return;
     }
 
@@ -350,7 +358,7 @@ export default function TicketBookingList({
       });
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to process settlement");
+      toast.error(error instanceof Error ? error.message : "Failed to process settlement", { duration: 6000 });
     } finally {
       setIsSettling(false);
     }
@@ -366,8 +374,8 @@ export default function TicketBookingList({
 
   return (
     <div className="saas-card bg-white flex flex-col h-full border-t-4 border-t-[#3da9d4] overflow-hidden relative shadow-sm">
-      <div className="p-4 border-b border-slate-100 flex flex-col xl:flex-row gap-3 items-center bg-slate-50/50 shrink-0">
-        <div className="relative w-full xl:flex-1">
+      <div className="p-4 border-b border-slate-100 justify-center flex flex-col xl:flex-row gap-3 items-center bg-slate-50/50 shrink-0">
+        <div className="relative w-full  xl:w-[500px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
@@ -377,16 +385,26 @@ export default function TicketBookingList({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div>
-
+        <div className="flex items-center gap-2">
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          
             <input
               type="date"
-              name="booking_date"
-              value={bookingDateFilter}
-              onChange={(e) => setBookingDateFilter(e.target.value)}
-              className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
+              name="startDate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="input-primary w-[140px] xl:w-[150px] text-sm h-10 rounded-lg pl-4 font-bold"
+            />
+          </div>
+          <span className="text-slate-400 font-medium text-sm">To</span>
+          <div className="relative">
+          
+            <input
+              type="date"
+              name="endDate"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="input-primary w-[130px] xl:w-[150px] text-sm h-10 rounded-lg pl-4 font-bold"
             />
           </div>
         </div>
@@ -526,7 +544,7 @@ export default function TicketBookingList({
                     title="Select visible unsettled tickets"
                   />
                 </th>
-                <th className="px-6 py-4  text-[12px]">Ticket Info</th>
+                <th className="px-6 py-4  text-[12px]">Ticket No.</th>
                 <th className="px-6 py-4  text-[12px]">Passenger</th>
                 <th className="px-6 py-4  text-[12px]">Route & Pickup</th>
                 <th className="px-6 py-4  text-[12px]">Journey</th>
@@ -636,9 +654,10 @@ export default function TicketBookingList({
                     <div className="flex flex-col gap-1.5  mt-0.5">
                       <span className="text-md text-emerald-600  font-bold">₹{ticket.amount || 0}</span>
 
-                      {/* <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
-                          {ticket.payment_type}
-                        </span> */}
+                      <span className="text-slate-500 font-bold flex items-center gap-1 uppercase text-[10px]">
+                          {ticket.account?.name ? `( ${ticket.account.name} )` : ""}
+                        </span>
+                         {/* {ticket.payment_type} */}
                     </div>
                   </td>
 
@@ -1080,7 +1099,7 @@ export default function TicketBookingList({
             setTicketToDelete(null);
             router.refresh();
           } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Failed to delete booking");
+            toast.error(error instanceof Error ? error.message : "Failed to delete booking", { duration: 6000 });
           } finally {
             setIsDeleting(false);
           }

@@ -72,7 +72,7 @@ export default function OperatorList({ initialOperators, accounts = [] }: Props)
       setOperatorToDelete(null);
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to delete operator");
+      toast.error(error instanceof Error ? error.message : "Failed to delete operator", { duration: 6000 });
     } finally {
       setIsDeleting(false);
     }

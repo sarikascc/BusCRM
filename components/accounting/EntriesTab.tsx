@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useMemo, useState, useEffect } from "react";
-import { Plus, Search, Download, RotateCcw, Trash2, Edit2 } from "lucide-react";
+import { Plus, Search, RotateCcw, Trash2, Edit2 } from "lucide-react";
 import { Entry, Account, Category, deleteEntry, getEntries } from "@/lib/actions/accounting.actions";
 import AddEntryModal from "./AddEntryModal";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -16,6 +16,9 @@ interface Props {
 const formatCurrency = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const getErrorMessage = (error: unknown) =>
   error instanceof Error ? error.message : "Something went wrong.";
+const isManualEntry = (entry: Entry) =>
+  entry.category?.name !== "Ticket Booking" &&
+  !entry.remarks?.match(/\[TID:[^\]]+\]|Operator Settlement/i);
 
 export default function EntriesTab({ initialEntries, accounts, categories }: Props) {
   const today = new Date().toISOString().split("T")[0];
@@ -30,6 +33,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
   const [modalType, setModalType] = useState<"Income" | "Expense">("Income");
   const [mounted, setMounted] = useState(false);
   const [entryToDelete, setEntryToDelete] = useState<Entry | null>(null);
+  const [entryToEdit, setEntryToEdit] = useState<Entry | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -105,7 +109,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
       toast.success("Entry deleted successfully");
       setEntryToDelete(null);
     } catch (error: unknown) {
-      toast.error(getErrorMessage(error));
+      toast.error(getErrorMessage(error), { duration: 6000 });
     } finally {
       setIsDeleting(false);
     }
@@ -151,7 +155,7 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
 
           <div className="flex items-center gap-2">
             <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} className="input-primary py-2 w-36" />
-            <span className="text-slate-400">to</span>
+            <span className="text-slate-400 text-sm">To</span>
             <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} className="input-primary py-2 w-36" />
           </div>
 
@@ -191,8 +195,10 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
             {entries.length === 0 ? (
               <tr><td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium">No entries found.</td></tr>
             ) : (
-              sortedEntries.map((entry) =>
-                createElement(
+              sortedEntries.map((entry) => {
+                const canEditEntry = isManualEntry(entry);
+
+                return createElement(
                   "tr",
                   {
                     key: entry.id,
@@ -217,12 +223,15 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
                     <td key="remarks" className="px-6 py-4 text-sm text-slate-500 truncate max-w-[200px]">{(entry.remarks || "-").replace(/\s*\[TID:[^\]]+\]/g, "").replace(/(Operator Settlement):\s*[a-fA-F0-9\-]+/g, "$1")}</td>,
                     <td key="actions" className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2 transition-opacity">
+                        {canEditEntry && (
+                          <button onClick={() => { setEntryToEdit(entry); setModalType(entry.type); setIsModalOpen(true); }} className="p-1.5 text-[#3da9d4] hover:bg-[#3da9d4]/10 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                        )}
                         <button onClick={() => setEntryToDelete(entry)} className="p-1.5 text-rose-400 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 size={16} /></button>
                       </div>
                     </td>,
                   ]
-                )
-              )
+                );
+              })
             )}
           </tbody>
         </table>
@@ -231,14 +240,16 @@ export default function EntriesTab({ initialEntries, accounts, categories }: Pro
       {isModalOpen && (
         <AddEntryModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => { setIsModalOpen(false); setEntryToEdit(null); }}
           type={modalType}
           accounts={accounts.filter((a) => a.status === "Active")}
           categories={categories.filter((c) => c.type === modalType && c.status === "Active")}
+          entry={entryToEdit}
           onSuccess={async () => {
             const updated = await getEntries(filters);
             setEntries(updated);
             setIsModalOpen(false);
+            setEntryToEdit(null);
           }}
         />
       )}

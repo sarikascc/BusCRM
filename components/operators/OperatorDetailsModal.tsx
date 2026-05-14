@@ -109,7 +109,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
 
   const handleProcessSettlementSubmit = async () => {
     if (!settlementForm.receiverMobile) {
-      toast.error("Please fill receiver details");
+      toast.error("Please fill receiver details", { duration: 6000 });
       return;
     }
 
@@ -141,7 +141,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
       setSelectedTicketIds([]);
       fetchData(); // Refresh data
     } catch (error) {
-      toast.error("Failed to process settlement");
+      toast.error("Failed to process settlement", { duration: 6000 });
     } finally {
       setIsSettling(false);
     }
@@ -483,7 +483,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                               ₹{settlement.paid_amount.toLocaleString()}
                             </div>
                             <span className="inline-block mt-1 text-[9px] font-black bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-wider">
-                              {settlement.payment_method}
+                              {settlement.payment_method} 
                             </span>
                           </td>
 
@@ -497,7 +497,7 @@ export default function OperatorDetailsModal({ isOpen, onClose, operator, accoun
                                 <Receipt size={12} /> View Receipt
                               </button> */}
                             </div>
-                          </td>
+                          </td> 
 
                         </tr>
                       ))}

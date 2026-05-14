@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Loader2, Wallet, Tag, Calendar, MessageSquare, CheckCircle2 } from "lucide-react";
-import { createEntry, Account, Category } from "@/lib/actions/accounting.actions";
+import { createEntry, updateEntry, Account, Category, Entry } from "@/lib/actions/accounting.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -13,9 +13,10 @@ interface Props {
   type: "Income" | "Expense";
   accounts: Account[];
   categories: Category[];
+  entry?: Entry | null;
 }
 
-export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accounts, categories }: Props) {
+export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accounts, categories, entry }: Props) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -32,37 +33,56 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        account_id: "",
-        category_id: "",
-        amount: "",
-        date: new Date().toISOString().split("T")[0],
-        remarks: "",
-      });
+      if (entry) {
+        setFormData({
+          account_id: entry.account_id,
+          category_id: entry.category_id,
+          amount: entry.amount.toString(),
+          date: entry.date ? new Date(entry.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+          remarks: entry.remarks ? entry.remarks.replace(/\s*\[TID:[^\]]+\]/g, "").replace(/(Operator Settlement):\s*[a-fA-F0-9\-]+/g, "$1") : "",
+        });
+      } else {
+        setFormData({
+          account_id: "",
+          category_id: "",
+          amount: "",
+          date: new Date().toISOString().split("T")[0],
+          remarks: "",
+        });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, entry]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.account_id || !formData.category_id || !formData.amount || !formData.date) {
-      toast.error("Please fill all required fields.");
+      toast.error("Please fill all required fields.", { duration: 6000 });
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await createEntry({
-        ...formData,
-        amount: parseFloat(formData.amount),
-        type,
-      });
-      toast.success(`${type} recorded successfully`);
+      if (entry) {
+        await updateEntry(entry.id, {
+          ...formData,
+          amount: parseFloat(formData.amount),
+          type,
+        });
+        toast.success(`${type} updated successfully`);
+      } else {
+        await createEntry({
+          ...formData,
+          amount: parseFloat(formData.amount),
+          type,
+        });
+        toast.success(`${type} recorded successfully`);
+      }
       onSuccess();
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message, { duration: 6000 });
     } finally {
       setIsSubmitting(false);
     }
@@ -76,7 +96,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
         }`}>
           <div>
             <h3 className={`text-lg font-bold ${type === "Income" ? "text-emerald-700" : "text-rose-700"}`}>
-              Record {type}
+              {entry ? `Update ${type}` : `Record ${type}`}
             </h3>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
               Enter transaction details below
@@ -178,7 +198,7 @@ export default function AddEntryModal({ isOpen, onClose, onSuccess, type, accoun
             ) : (
               <>
                 <CheckCircle2 size={18} />
-                Save {type} Entry
+                {entry ? "Update" : "Save"} {type} Entry
               </>
             )}
           </button>
