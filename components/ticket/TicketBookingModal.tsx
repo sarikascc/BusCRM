@@ -712,8 +712,7 @@ export default function TicketBookingModal({ isOpen, onClose, onSuccess, booking
                       type="date"
                       name="journey_date"
                       value={formDataState.journey_date}
-                      onChange={handleInputChange}
-                      min={booking ? undefined : todayStr}
+                      onChange={handleInputChange}        
                       className="input-primary w-full text-sm h-10 rounded-lg pl-10 font-bold"
                     />
                   </div>
